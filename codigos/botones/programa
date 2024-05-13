@@ -1,0 +1,129 @@
+module contadormin #(parameter COUNT_MAX=10, COUNT_BOT=3)(
+	input test,
+	input reset,
+	input b_energia,
+	input b_sueno,
+	input clk,
+	output led1,
+	output led2,
+	output senal_sueno,
+	output senal_ener,
+	output bprev,
+	output [$clog2(COUNT_BOT+1)-1:0] countert_ener
+);
+
+reg clkr;
+reg [$clog2(COUNT_MAX)-1:0] counter;
+reg [2:0] contador_test;
+reg [2:0] contador_reset;
+reg [$clog2(COUNT_BOT+2)-1:0] counter_ener;
+reg [$clog2(COUNT_BOT+2)-1:0] counter_sueno;
+reg salida1;
+reg salida2;//para los reset y test
+reg flancoB_energia;
+reg button_prev_energia;
+reg button_energia_filtrado;
+reg flancoB_sueno;
+reg button_prev_sueno;
+reg button_sueno_filtrado;
+
+initial begin
+	button_sueno_filtrado=0;
+	button_energia_filtrado=0;
+	counter_ener=COUNT_BOT; //se evitan problemas con la filtracion de la señal
+	counter_sueno=COUNT_BOT;
+	flancoB_sueno=0;
+	button_prev_sueno=0;
+	button_prev_energia=0;
+	flancoB_energia =0;
+	contador_test=0;
+	contador_reset=0;
+	counter=0;
+	clkr=0;
+	salida1=0;
+	salida2=0;
+end	
+	
+always @(posedge clk) begin
+		if (b_energia==0) begin
+			if(counter_ener<COUNT_BOT)begin
+			counter_ener <= counter_ener+1;			//al estar en 0 le sumamos 1 a nuestro contador
+			end 
+		end else begin
+			counter_ener<=0;			
+		end
+		
+		if(counter_ener<COUNT_BOT) begin //si la señal lleva cierto tiempo sin estar en 0, todavia lo toma como un 1
+			button_energia_filtrado=1;
+		end else begin
+			button_energia_filtrado=0;
+		end
+		
+		flancoB_energia<=~button_prev_energia&button_energia_filtrado;
+		button_prev_energia<=button_energia_filtrado;
+		
+		//para boton de sueno
+		if (b_sueno==0) begin
+			if(counter_sueno<COUNT_BOT)begin
+			counter_sueno <= counter_sueno+1;			//al estar en 0 le sumamos 1 a nuestro contador
+			end
+		end else begin
+			counter_sueno<=0;			
+		end
+		
+		if(counter_sueno<COUNT_BOT) begin //si la señal lleva cierto tiempo sin estar en 0, todavia lo toma como un 1
+			button_sueno_filtrado=1;
+		end else begin
+			button_sueno_filtrado=0;
+		end
+		
+		flancoB_sueno<=~button_prev_sueno&button_sueno_filtrado;
+		button_prev_sueno<=button_sueno_filtrado;
+	
+	
+		if (counter== COUNT_MAX-1) begin 
+			clkr = ~clkr;
+			counter <=0;
+		end else begin
+			counter<= counter +1;
+		end
+		
+	end 
+always @(posedge clkr) begin
+		
+		if (test==0) begin
+				//if (contador_test<6) begin
+					contador_test<=contador_test+1;
+				//end
+		end else begin
+				contador_test<=0;
+		end 
+		if (reset==0) begin
+				//if (contador_reset<6) begin
+				contador_reset<=contador_reset+1;
+				//end
+		end else begin
+				contador_reset<=0;
+				salida2<=1;
+		end
+		
+		if(contador_test==5) begin
+			salida1 <= ~salida1;
+			contador_test<=0;
+		end
+		if(contador_reset==5) begin
+			salida2<=0;
+			contador_reset <=0;
+			//salida2 <= ~salida;
+		end
+		
+end
+
+assign led2 =salida2;
+assign led1 =salida1;
+assign senal_sueno=flancoB_sueno;
+assign senal_ener=flancoB_energia;	
+assign bprev=button_prev_energia;
+assign countert_ener=counter_ener;
+	
+endmodule
