@@ -12,8 +12,8 @@ module Top(
    input b_comida,
    input b_medicina,
    output Trigger,
-   output Led, Led_dormir,Led_Comida,Led_Medicina ,
-   output Led_animo,Led_hambre, Led_sueno, Led_salud
+   output Led, Led_dormir,Led_Comida,Led_Medicina,
+   output Led_animo,Led_hambre, Led_sueno, Led_salud,dormir, comida
 );
 
 wire Carino;
@@ -53,6 +53,6 @@ EstadosT estadost(
 
  assign Led=Carino;
  assign Led_dormir=~Dormir;
- assign Led_Comida=Comida;
- assign Led_Medicina=Medicina;
+ assign Led_Comida=~Comida;
+ assign Led_Medicina=~Medicina;
 endmodule
