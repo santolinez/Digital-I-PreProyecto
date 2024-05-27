@@ -1,12 +1,9 @@
-module EstadosT#(parameter COUNT_MAX = 6250000)(
+module EstadosT#(parameter COUNT_MAX = 6250000 )(//6250000
     input clk,
     input Carino,
-   // input Comida,
-   // input Medicina,
     input Dormir,
-   // input modo_test,
-   // input test,
-   // input reseteo,
+    input Comida,
+    input Medicina,
     output Led_animo,Led_hambre, Led_sueno, Led_salud
 );
 
@@ -19,7 +16,8 @@ reg animo_done, hambre_done, sueno_done, salud_done;
 reg animo_reg, hambre_reg, sueno_reg, salud_reg;
 reg [1:0] state;
 reg ledA_reg, ledH_reg, ledZ_reg, ledS_reg;
-
+reg ledpr1;
+reg ledpr2;
 
 parameter ANIMO=0;
 parameter HAMBRE=1;
@@ -40,8 +38,8 @@ always@(posedge clk) begin
 initial begin
     state <= ANIMO;
     counter <= 0;
-    count_tiem <= 0;
     seg <= 0;
+    count_tiem <= 0;
     animo_done <= 0;
     hambre_done <= 0;
     sueno_done <= 0;
@@ -70,7 +68,6 @@ end
 endcase
 end
 
-
 always @(posedge seg) begin
 count_tiem <= count_tiem + 1;
 case(state)
@@ -78,9 +75,9 @@ ANIMO:begin
     if (count_tiem > 60) begin 
             animo_done <= 1;
             count_tiem <= 0;
-				state=HAMBRE;
     end	 
 end
+
 HAMBRE:begin
 	animo_done <= 0; 
 	if (count_tiem > 60) begin 
@@ -89,9 +86,25 @@ HAMBRE:begin
     end
 	end
 
-endcase
-end
+SUENO:begin
+	hambre_done <= 0; 
+	if (count_tiem > 60) begin 
+            sueno_done <= 1;
+            count_tiem <= 0;
+    end
+	end
 
+SALUD:begin
+	sueno_done <= 0; 
+	if (count_tiem > 60) begin 
+            salud_done <= 1;
+            count_tiem <= 0;
+    end
+	end
+    
+endcase
+end 
+ 
 
 always @(posedge clk) begin
     animo_reg <= (state == ANIMO);
@@ -100,71 +113,6 @@ always @(posedge clk) begin
     salud_reg <= (state == SALUD);
 end
 
-
-always @(posedge seg) begin
-    if (animo_reg)begin 
-    count_tiem <= count_tiem + 1;
-    if (count_tiem < 60) begin 
-			animo_done <= 0;
-            hambre_done <= 0;
-            salud_done <= 0;
-            sueno_done <= 0;
-        end else begin
-            animo_done <= 1;
-            hambre_done <= 0;
-            salud_done <= 0;
-            sueno_done <= 0;
-            count_tiem <= 0;
-        end
-    end else if (hambre_reg)begin 
-    count_tiem <= count_tiem + 1;
-    if (count_tiem < 60) begin 
-            animo_done <= 0;
-            hambre_done <= 0;
-			sueno_done <= 0;
-            salud_done <= 0;
-        end else begin
-            animo_done <= 0;
-            hambre_done <= 1;
-            sueno_done <= 0; 
-            salud_done <= 0;
-            count_tiem <= 0;    
-        end
-    end else if (sueno_reg)begin 
-    count_tiem <= count_tiem + 1;
-    if (count_tiem < 60) begin 
-			animo_done <= 0;
-            hambre_done <= 0;
-			sueno_done <= 0;
-            salud_done <= 0;
-        end else begin
-           animo_done <= 0;
-            hambre_done <= 0;
-            sueno_done <= 1; 
-            salud_done <= 0;
-            count_tiem <= 0; 
-        end
-    end else if (salud_reg)begin 
-    count_tiem <= count_tiem + 1;
-    if (count_tiem < 60 ) begin 
-			animo_done <= 0;
-            hambre_done <= 0;
-			sueno_done <= 0;
-            salud_done <= 0;
-        end else begin
-            animo_done <= 0;
-            hambre_done <= 0;
-            sueno_done <= 0; 
-            salud_done <= 1;
-            count_tiem <= 0; 
-        end
-    end else begin
-    animo_done <= 0;
-    hambre_done <= 0;
-    sueno_done <= 0;
-    salud_done <= 0;
-    end     
-end
 
 always @(negedge seg)begin
     if(animo_done)begin
@@ -184,7 +132,26 @@ always @(negedge seg)begin
         Nivel_salud<= Nivel_salud -1;
 		  end
     end 
+	 
+	if(Medicina)begin
+	count_medicina <= count_medicina + 1;
+       if (count_medicina == 15) begin 
+        if(Nivel_salud<3) begin 
+			Nivel_salud <= Nivel_salud + 1;
+			end 
+			end
+	end
+	
 
+	if(Comida)begin 
+    count_comida <= count_comida + 1;
+       if (count_comida == 15) begin 
+        if(Nivel_hambre<3) begin 
+			Nivel_hambre <= Nivel_hambre + 1;
+			end
+			end
+	end 
+    
    if(Carino)begin 
         count_carino <= count_carino + 1;
          if (count_carino == 15) begin 
@@ -207,31 +174,9 @@ always @(negedge seg)begin
          count_dormir <= 0;
     end
 
-    /*if(Comida)begin 
-        count_comida <= count_comida + 1;
-         if (count_comida == 5) begin 
-			if(Nivel_hambre<3) begin 
-			Nivel_hambre <= Nivel_hambre + 1;
-			end
-        end
-    end else begin 
-         count_comida <= 0;
-    end
-
-    if(Medicina)begin 
-        count_medicina <= count_medicina + 1;
-         if (count_medicina == 5) begin 
-			if(Nivel_salud <3) begin 
-			Nivel_salud <= Nivel_salud + 1;
-			end
-        end
-    end else begin 
-         count_comida <= 0;
-    end*/
-
 end
 
-always @(posedge clk) begin 
+always @(posedge clk) begin
     if (Nivel_animo<3)begin
         ledA_reg=1;
     end else begin 
@@ -258,7 +203,5 @@ assign Led_animo = ~ledA_reg;
 assign Led_hambre = ~ledH_reg;
 assign Led_sueno = ~ledZ_reg;
 assign Led_salud = ~ledS_reg;
-
-
 
 endmodule
