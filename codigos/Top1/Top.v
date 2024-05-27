@@ -1,44 +1,35 @@
 // `include "Top/Ultrasonido.v"
 // `include "Top/EstadosT.v"
-// `include "Top/Botones.v"
+// `include "Top/Botones_antirebote.v"
 // `include "Top/BotonesT.v"
+
 module Top(
    input clk,
    input Echo,
    input Enable,
-   //input B_Comida,
-   //input B_Medicina,
    input Dormir,
-   //input test,
-   //input reset,
-	//output led_modo_test,
-	//output led_reset,
+   input test,reset,
+   input b_comida,
+   input b_medicina,
    output Trigger,
-   output Led, Led_dormir,
-   //Led_Comida,Led_Medicina ,
+   output Led, Led_dormir,Led_Comida,Led_Medicina ,
    output Led_animo,Led_hambre, Led_sueno, Led_salud
 );
 
 wire Carino;
-//wire Comida;
-//wire Medicina;
-//wire modo_test;
-//wire reseteo;
+wire Comida;
+wire Medicina;
 
-/* BotonesT botonest(
-    .B_Comida(B_Comida),
-    .B_Medicina(B_Medicina),
-    .Led_Comida(Comida),
-    .Led_Medicina(Medicina)
-); */
-
-/* Botones botones(
+Botones_antirebote botones_antirebote(
     .clk(clk),
     .test(test),
     .reset(reset),
-    .led1(modo_test),
-    .led2(reseteo)
-); */
+    .b_comida(b_comida),
+    .b_medicina(b_medicina),
+    .led1(test),
+    .led2(Comida),
+    .led3(Medicina)
+); 
 
 Ultrasonido ultrasonido(
     .clk(clk),
@@ -55,17 +46,13 @@ EstadosT estadost(
     .Led_sueno(Led_sueno),
     .Led_salud(Led_salud),
     .Carino(~Carino),
-    //.Medicina(Medicina),
-    .Dormir(Dormir)
-   // .Comida(Comida)
-    //.modo_test(modo_test),
-    //.reseteo(reseteo),
-    //.test(test)
+    .Dormir(Dormir),
+	.Medicina(Medicina),
+	.Comida(Comida)
 );
+
  assign Led=Carino;
  assign Led_dormir=~Dormir;
- //assign Led_Comida = Comida;
- //assign Led_Medicina = Medicina;
- //assign led_modo_test=modo_test;
- //assign led_rest= reseteo;
+ assign Led_Comida=Comida;
+ assign Led_Medicina=Medicina;
 endmodule
