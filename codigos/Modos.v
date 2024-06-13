@@ -60,4 +60,3 @@ assign LED_Energia = Nivel_Energia;
 assign LED_Medicina = Nivel_Medicina;
 
 endmodule
-
