@@ -1,0 +1,46 @@
+**** module/scope: Botones_antirebote
+     Flip-Flops   : 4
+     Logic Gates  : 4
+     LOG[13]: 1 unaccounted
+     LOG[14]: 1 unaccounted
+**** module/scope: Botones_antirebote.B_Energia
+     Flip-Flops   : 4
+     Logic Gates  : 298
+     ADDER[3]: 1 units
+     EQUALITY[32]: 4 units
+     MUX[2]: 14 slices
+     LOG[13]: 1 unaccounted
+     LOG[14]: 1 unaccounted
+**** module/scope: Botones_antirebote.B_Medicina
+     Flip-Flops   : 4
+     Logic Gates  : 298
+     ADDER[3]: 1 units
+     EQUALITY[32]: 4 units
+     MUX[2]: 14 slices
+     LOG[13]: 1 unaccounted
+     LOG[14]: 1 unaccounted
+**** module/scope: Botones_antirebote.B_Reset
+     Flip-Flops   : 6
+     Logic Gates  : 318
+     ADDER[5]: 1 units
+     EQUALITY[32]: 4 units
+     MUX[2]: 22 slices
+     LOG[13]: 1 unaccounted
+     LOG[14]: 1 unaccounted
+**** module/scope: Botones_antirebote.B_Test
+     Flip-Flops   : 6
+     Logic Gates  : 318
+     ADDER[5]: 1 units
+     EQUALITY[32]: 4 units
+     MUX[2]: 22 slices
+     LOG[13]: 1 unaccounted
+     LOG[14]: 1 unaccounted
+**** TOTALS
+     Flip-Flops   : 24
+     Logic Gates  : 1236
+     ADDER[3]: 2 units
+     ADDER[5]: 2 units
+     EQUALITY[32]: 16 units
+     MUX[2]: 72 slices
+     LOG[13]: 5 unaccounted
+     LOG[14]: 5 unaccounted
