@@ -225,16 +225,16 @@ module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, param
         INIT_SEQ [82] = {1'b0, ILI9341_SLPOUT};
     end 
 
-    always @(negedge clk, posedge rst)begin
-        if(rst) begin
+    always @(negedge clk)begin
+        if(rst==0) begin
             fsm_state <= START;
         end else begin
             fsm_state <= next_state;
         end
     end
 
-    always @ (negedge clk, posedge rst) begin
-        if (rst) begin
+    always @ (negedge clk) begin
+        if (rst==0) begin
             delay_counter <= 'b0;
         end else if (en_delay_100ms) begin
             if (delay_counter < DELAY_100ms) begin
@@ -262,8 +262,8 @@ module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, param
         endcase
     end
 
-    always @ (negedge clk, posedge rst) begin
-        if(rst)begin 
+    always @ (negedge clk) begin
+        if(rst==0)begin 
             spi_data <= 'b0;
             config_counter <= 'b0;
             available_data <= 'b0;
@@ -396,6 +396,7 @@ module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, param
                 WAIT_FRAME: begin
                     if(idle) begin
                         available_data <= 1'b0;
+                        data_byte_flag <= !data_byte_flag;
                     end
                 end
             endcase
