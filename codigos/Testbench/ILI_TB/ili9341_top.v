@@ -30,6 +30,10 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
     initial begin 
         imagen <= 'h07FF;
         fsm_state <= IDLE;
+        pixel_counter <= 'b0;
+        transmission_done <= 'b0;
+        current_pixel <= 'b0;
+
     end
     
     freq_divider #(2) freq_divider20MHz (
@@ -39,11 +43,14 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
     );  
 
  
-    always @(posedge clk_input_data) begin
+    always @(posedge clk_out) begin
         if (!rst) begin
             fsm_state <= IDLE;
         end else  if (transmission_done) begin
             fsm_state <= next_state;
+            pixel_counter <= 'b0;	
+            transmission_done <= 0; 
+			current_pixel <=0;
         end
     end
 
@@ -59,7 +66,7 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
     end
 
 
-    always @(posedge clk) begin
+    always @(posedge clk_out) begin
         if (!rst) begin
             imagen <= 'h001F; // Azul oscuro
         end else begin
@@ -87,11 +94,7 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
                 if (pixel_counter == RESOLUTION - 1) begin
                     transmission_done <= 1;
                 end
-            end else begin
-				pixel_counter <= 'b0;	
-                transmission_done <= 0; 
-				current_pixel <=0;
-            end
+            end 
         end
     end
 
