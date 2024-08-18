@@ -13,13 +13,14 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
 
     wire clk_out;
     wire clk_input_data;
+    reg [2:0] prev_visua;
     reg [2:0] fsm_state, next_state;
     reg [PIXEL_SIZE-1:0] imagen;
     reg [PIXEL_SIZE-1:0] current_pixel;
     reg [PIXEL_SIZE-1:0] pixel_data_mem[0:RESOLUTION-1];
 
     reg [$clog2(RESOLUTION)-1:0] pixel_counter;
-    reg transmission_done;
+    reg transmission_done,Nueva_imagen;
 
     localparam IDLE = 0;
     localparam TRISTE = 1;
@@ -30,16 +31,19 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
     initial begin 
         imagen <= 'h07FF;
         fsm_state <= IDLE;
+        pixel_counter <= 'b0;
+            transmission_done <= 'b0;
+            current_pixel <= 'b0;
     end
-    
-    freq_divider #(2) freq_divider20MHz (
+
+    freq_divider #(3) freq_divider20MHz (
         .clk(clk),
         .rst(rst),
         .clk_out(clk_out)
     );  
 
- 
-    always @(posedge clk_input_data) begin
+
+    always @(posedge clk_out) begin
         if (!rst) begin
             fsm_state <= IDLE;
         end else  if (transmission_done) begin
@@ -59,10 +63,16 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
     end
 
 
-    always @(posedge clk_input_data) begin
+    always @(posedge clk_out) begin
         if (!rst) begin
             imagen <= 'h001F; // Azul oscuro
         end else begin
+            if (visua != prev_visua) begin
+                Nueva_imagen <= 1'b1; // Hold high until acted upon
+            end else if(pixel_counter==0) begin
+                Nueva_imagen <= 1'b0;
+            end 
+            prev_visua <= visua;
             case(fsm_state)
                 IDLE: imagen <= 'hFFE0; // Amarillo
                 TRISTE: imagen <= 'h07FF; // Azul clarito
@@ -74,7 +84,7 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
         end
     end
 
-	 
+
     always @(posedge clk_input_data) begin
         if (!rst) begin
             pixel_counter <= 'b0;
@@ -87,10 +97,10 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
                 if (pixel_counter == RESOLUTION - 1) begin
                     transmission_done <= 1;
                 end
-            end else begin
-					 pixel_counter <= 'b0;	
-                transmission_done <= 0; 
-					 current_pixel <=0;
+            end else if (Nueva_imagen) begin
+                transmission_done <= 'b0;
+                pixel_counter <= 'b0;
+                current_pixel <= imagen; 	
             end
         end
     end
@@ -106,5 +116,4 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
         .spi_dc(spi_dc),
         .data_clk(clk_input_data)
     );
-
 endmodule
