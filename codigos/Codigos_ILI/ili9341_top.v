@@ -38,28 +38,27 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
         .clk_out(clk_out)
     );  
 
-    // FSM State Transition
+ 
     always @(posedge clk_input_data) begin
         if (!rst) begin
             fsm_state <= IDLE;
-        end else  //if (transmission_done) begin
+        end else  if (transmission_done) begin
             fsm_state <= next_state;
-        //end
+        end
     end
 
-    // Next State Logic
     always @(*) begin
-        case(fsm_state)
-            IDLE: next_state = (visua == 0) ? IDLE : TRISTE;
-            TRISTE: next_state = (visua == 1) ? TRISTE : CARINO;
-            CARINO: next_state = (visua == 2) ? CARINO : DEPRIMIDO;
-            DEPRIMIDO: next_state = (visua == 3) ? DEPRIMIDO : MUERTO;
-            MUERTO: next_state = (visua == 4) ? MUERTO : IDLE;
+        case(visua)
+            0: next_state = IDLE;
+            1: next_state = TRISTE;
+            2: next_state = CARINO;
+            3: next_state = DEPRIMIDO;
+            4: next_state = MUERTO;
             default: next_state = IDLE;
         endcase
     end
 
-    // Image Assignment Based on FSM State
+
     always @(posedge clk_input_data) begin
         if (!rst) begin
             imagen <= 'h001F; // Azul oscuro
@@ -75,7 +74,7 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
         end
     end
 
-    // Pixel Data and Transmission Control
+	 
     always @(posedge clk_input_data) begin
         if (!rst) begin
             pixel_counter <= 'b0;
@@ -83,13 +82,15 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
             current_pixel <= 'b0;
         end else begin
             if (!transmission_done) begin
-                current_pixel <= imagen; // Use the selected image color
+                current_pixel <= imagen; 
                 pixel_counter <= pixel_counter + 1;
                 if (pixel_counter == RESOLUTION - 1) begin
                     transmission_done <= 1;
                 end
             end else begin
-                transmission_done <= 0; // Reset transmission_done for next frame
+					 pixel_counter <= 'b0;	
+                transmission_done <= 0; 
+					 current_pixel <=0;
             end
         end
     end
