@@ -396,6 +396,7 @@ module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, param
                 WAIT_FRAME: begin
                     if(idle) begin
                         available_data <= 1'b0;
+                        data_byte_flag <= !data_byte_flag;
                     end
                 end
             endcase
