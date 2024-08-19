@@ -2,6 +2,7 @@
  `include "Modos_&_Botones_TB/Botones_antirebote.v"
 
 
+
  module Modos(
     //Entradas 
     input clk,
@@ -10,23 +11,26 @@
 
     input Bot_Energia,
     input Bot_Medicina,
+
     input Entrada_Descanso,
     input Entrada_Animo,
-    
+   
     input Activo_Comida,
     input Activo_Medicina,
 
-
     //Salidas
-
-   output Reset_General,
+    output Reset_General,
 
     output [0:1]LED_Animo,
     output [0:1]LED_Energia,
     output [0:1]LED_Descanso,
     output [0:1]LED_Medicina,
+
 	 output senal_5segEnergia,
-	 output senal_5segMedicina
+	 output senal_5segMedicina,
+    output senal_5segDescanso,
+    output senal_5segAnimo,
+    output B_reset
 );
 
 wire [0:1] Nivel_Animo;
@@ -40,9 +44,8 @@ wire B_Test;
 wire B_Energia;
 wire B_Medicina;
 
-wire senal_5segunEnergia;
-wire senal_5segunMedicina;
-
+wire S_ultra;
+wire S_fotocel;
 
 
 
@@ -52,10 +55,14 @@ Botones_antirebote utt(.clk(clk),
                         .test(Bot_Test),
                         .b_energia(Bot_Energia),
                         .b_medicina(Bot_Medicina),
+                        .sensor_ult_in(Entrada_Animo),
+                        .sensor_fot_in(Entrada_Descanso),
                         .Senal_Reset(B_Reset), 
                         .Senal_Test(B_Test), 
                         .Senal_Energia(B_Energia), 
-                        .Senal_Medicina(B_Medicina)
+                        .Senal_Medicina(B_Medicina),
+                        .Senal_ultrasonido(S_ultra),
+                        .Senal_fot(S_fotocel)
                         );
 
 
@@ -63,19 +70,15 @@ Botones_antirebote utt(.clk(clk),
 
 
 
-Modo_Primitivo #(10) Modo_Animo (.clk(clk), .Entrada(Entrada_Animo), .Nivel(Nivel_Animo),.activo(1'b1));
-Modo_Primitivo #(10) Modo_Descanso (.clk(clk), .Entrada(1'b1), .Nivel(Nivel_Descanso),.activo(1'b1));
-Modo_Primitivo #(10) Modo_Energia (.clk(clk), .Entrada(B_Energia), .Nivel(Nivel_Energia),.activo(Activo_Comida),.senal_5seg(senal_5segunEnergia));
-Modo_Primitivo #(10) Modo_Medicina (.clk(clk), .Entrada(B_Medicina), .Nivel(Nivel_Medicina),.activo(Activo_Medicina),.senal_5seg(senal_5segunMedicina));
+Modo_Primitivo #(10) Modo_Animo (.clk(clk), .Entrada(S_ultra), .Nivel(Nivel_Animo),.activo(1'b1),.senal_5seg(senal_5segAnimo));
+Modo_Primitivo #(10) Modo_Descanso (.clk(clk), .Entrada(S_fotocel), .Nivel(Nivel_Descanso),.activo(1'b1),.senal_5seg(senal_5segDescanso));
+Modo_Primitivo #(10) Modo_Energia (.clk(clk), .Entrada(B_Energia), .Nivel(Nivel_Energia),.activo(Activo_Comida),.senal_5seg(senal_5segEnergia));
+Modo_Primitivo #(10) Modo_Medicina (.clk(clk), .Entrada(B_Medicina), .Nivel(Nivel_Medicina),.activo(Activo_Medicina),.senal_5seg(senal_5segMedicina));
 
 
 assign LED_Animo = Nivel_Animo;
 assign LED_Descanso = Nivel_Descanso;
 assign LED_Energia = Nivel_Energia;
 assign LED_Medicina = Nivel_Medicina;
-assign senal_5segEnergia=senal_5segunEnergia;
-assign senal_5segMedicina=senal_5segunMedicina;
-
-assign Reset_General = B_Reset;
-
+assign Reset_General= B_Reset;
 endmodule
