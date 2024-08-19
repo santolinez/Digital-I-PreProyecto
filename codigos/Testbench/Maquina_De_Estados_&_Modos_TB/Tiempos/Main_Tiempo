@@ -1,0 +1,24 @@
+module Main_Tiempo (
+    input wire clk_50MHz,  // Reloj de entrada de 50 MHz
+    input wire reset,      // Señal de reinicio
+    output wire clk_1Hz,   // Reloj de salida de 1 Hz
+    output wire [5:0] segundos,  // Contador de segundos (0-59)
+    output wire [3:0] parametro // Parámetro que disminuye cada 15 segundos
+);
+
+    // Instanciar el divisor de frecuencia
+    Divisor_De_Frecuencia u1 (
+        .clk_50MHz(clk_50MHz),
+        .reset(reset),
+        .clk_1Hz(clk_1Hz)
+    );
+
+    // Instanciar el contador de segundos
+    Cont_Segundos u2 (
+        .clk_1Hz(clk_1Hz),
+        .reset(reset),
+        .segundos(segundos),
+        .parametro(parametro)
+    );
+
+endmodule
