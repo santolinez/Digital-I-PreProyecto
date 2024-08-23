@@ -1,4 +1,4 @@
-`include "Prueba_Maquina_Estados/Prueba_2/Maq_Est_Y_Modos.v"
+`include "codigos/Testbench/Maquina_De_Estados_Y_Modos_TB/Prueba_Maquina_Estados/Prueba_2/Maq_Est_Y_Modos.v"
 
 module Maq_Est_Y_Modos_TB();
     
