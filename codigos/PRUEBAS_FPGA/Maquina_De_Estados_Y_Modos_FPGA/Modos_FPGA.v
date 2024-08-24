@@ -1,5 +1,5 @@
- `include "Modo_Primitivo.v"
- `include "Botones_antirebote.v"
+ //`include "Modo_Primitivo.v"
+ //`include "Botones_antirebote.v"
 
 
  module Modos(
@@ -28,8 +28,7 @@
 	 output senal_5segEnergia,
 	 output senal_5segMedicina,
     output senal_5segDescanso,
-    output senal_5segAnimo,
-    output B_reset
+    output senal_5segAnimo
 );
 
 wire [0:1] Nivel_Animo;

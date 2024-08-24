@@ -43,9 +43,10 @@ Maquina_Estados_1 maq_est(
 
 Modos mods(
     .clk(clk),
+    .Bot_Reset(reset),
     .Bot_Energia(Boton_Comida),
     .Bot_Medicina(Boton_Medicina),
-    .Reset_General(reset),
+    .Reset_General(Senal_Reset),
     .senal_5segEnergia(Senal_5Seg_Comida),
     .senal_5segMedicina(Senal_5Seg_Medicina),
     .Activo_Comida(Senal_Activo_Comida),
@@ -53,7 +54,6 @@ Modos mods(
     .LED_Energia(Cable_Niveles_Comida),
     .LED_Medicina(Cable_Niveles_Medicina)
 );
-
 
 
 

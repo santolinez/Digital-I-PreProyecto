@@ -75,6 +75,8 @@ module Modos_TB;
     end
 
     always #1 clk = ~clk; // Cambia cada nanosegundo (1ns)
+    always #200 B_Reset = ~B_Reset;
+    always #30 Entrada_Animo = ~Entrada_Animo;
 
     //always #300 B_Energia = ~B_Energia; // Cada 10 flancos de subida la señal cambia [#20 es cada 20ns]
 

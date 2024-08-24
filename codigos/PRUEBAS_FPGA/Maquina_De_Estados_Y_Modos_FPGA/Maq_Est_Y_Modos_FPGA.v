@@ -43,6 +43,7 @@ Maquina_Estados_1 maq_est(
 
 Modos mods(
     .clk(clk),
+    .Bot_Reset(reset,)
     .Bot_Energia(Boton_Comida),
     .Bot_Medicina(Boton_Medicina),
     .Reset_General(reset),

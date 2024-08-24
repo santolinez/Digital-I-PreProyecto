@@ -9,14 +9,14 @@ reg [$clog2(COUNT_BOT)-1:0] counter;
 
 initial begin
 		counter=0;
-		boton_out=0;
+		boton_out=1;
 end
 
 // antirebote  energia
 always @(posedge clk) begin
-	if (reset)begin
+	if (~reset)begin
 		counter <=0;
-		boton_out<=0;
+		boton_out<=1;
 	end else begin
 		if (boton_in==~boton_out) begin
 			counter <= counter+1;			
