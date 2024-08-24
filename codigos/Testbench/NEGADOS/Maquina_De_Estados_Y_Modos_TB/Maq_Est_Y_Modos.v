@@ -32,7 +32,7 @@ wire Senal_Activo_Medicina;
 
 Maquina_Estados_1 maq_est(
     .clk(clk), 
-    .reset(Senal_Reset),
+    .reset(reset),
     .Boton_Comida(Senal_5Seg_Comida),
     .Boton_Medicina(Senal_5Seg_Medicina),
     .Nivel_Comida(Cable_Niveles_Comida),

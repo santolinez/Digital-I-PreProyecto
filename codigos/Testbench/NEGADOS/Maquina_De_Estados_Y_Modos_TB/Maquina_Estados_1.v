@@ -34,8 +34,8 @@ module Maquina_Estados_1 (
     end
 
     // Lógica secuencial para actualización de estados
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (~reset) begin
             Estados <= Estado_IDLE;
         end else begin
             Estados <= Estado_Siguiente;
@@ -84,8 +84,8 @@ module Maquina_Estados_1 (
     end
 
     // Lógica secuencial para las salidas
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (~reset) begin
             Activo_Comida <= 1'b1;
             Activo_Medicina <= 1'b1;
             Visualizacion <= 2'b00;

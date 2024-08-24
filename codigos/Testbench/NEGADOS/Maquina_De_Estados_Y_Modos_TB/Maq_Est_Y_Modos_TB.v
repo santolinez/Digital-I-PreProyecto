@@ -26,7 +26,7 @@ module Maq_Est_Y_Modos_TB();
 
     always #1 clk = ~clk;
     always #500 reset = ~reset;
-    always #25 Boton_Comida = ~Boton_Comida;
+    always #15 Boton_Comida = ~Boton_Comida;
     always #35 Boton_Medicina = ~Boton_Medicina;
 
     initial begin: TEST_CASE

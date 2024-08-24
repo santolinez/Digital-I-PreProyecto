@@ -32,7 +32,7 @@ initial begin
 always @(posedge clk)begin
 Entrada_Sube_Nivel=~(Entrada_prev==Entrada);
 Entrada_prev=Entrada;
-if (B_reset) begin
+if (~B_reset) begin
     Contador_Nivel <= 3;
     Contador_Tiempo <= 0;
 	 Contador_5segundos<=1;
