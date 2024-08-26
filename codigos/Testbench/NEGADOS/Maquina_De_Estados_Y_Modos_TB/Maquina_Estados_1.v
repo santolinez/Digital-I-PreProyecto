@@ -10,9 +10,16 @@ module Maquina_Estados_1 (
     output reg [1:0] Visualizacion,
 
     output reg Activo_Comida,
-    output reg Activo_Medicina
+    output reg Activo_Medicina,
 
+
+// PARA LA IMPLEMENTACION DE 7 SEGMENTOS
+    output reg [0:15] Salida_7seg
 );
+
+    
+
+    
 
     // Declaración de estados
     reg [1:0] Estados;
@@ -31,6 +38,7 @@ module Maquina_Estados_1 (
         Activo_Comida = 1'b1;
         Activo_Medicina = 1'b1;
         Visualizacion = 2'b00;
+        Salida_7seg = 0;
     end
 
     // Lógica secuencial para actualización de estados
@@ -85,6 +93,7 @@ module Maquina_Estados_1 (
 
     // Lógica secuencial para las salidas
     always @(posedge clk or negedge reset) begin
+        Salida_7seg = Visualizacion*10+Nivel_Comida;
         if (~reset) begin
             Activo_Comida <= 1'b1;
             Activo_Medicina <= 1'b1;

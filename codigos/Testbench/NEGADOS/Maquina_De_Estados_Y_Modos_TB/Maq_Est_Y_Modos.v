@@ -1,13 +1,16 @@
 `include "Maquina_Estados_1.v"
 `include "Modos.v"
-
+`include "display.v"
 module Maq_Est_Y_Modos (
 
     input clk,
     input reset,
 
     input Boton_Comida,
-    input Boton_Medicina
+    input Boton_Medicina,
+
+    output [0:6]sseg,
+    output [4:0]an
 
 );
 
@@ -29,16 +32,18 @@ wire [1:0] Cable_Niveles_Comida;
 wire Senal_Activo_Comida;
 wire Senal_Activo_Medicina;
 
+wire [0:15]Siete_Segmentos;
+
 
 Maquina_Estados_1 maq_est(
     .clk(clk), 
-    .reset(reset),
+    .reset(Senal_Reset),
     .Boton_Comida(Senal_5Seg_Comida),
     .Boton_Medicina(Senal_5Seg_Medicina),
     .Nivel_Comida(Cable_Niveles_Comida),
     .Activo_Comida(Senal_Activo_Comida),
-    .Activo_Medicina(Senal_Activo_Medicina)
-
+    .Activo_Medicina(Senal_Activo_Medicina),
+    .Salida_7seg(Siete_Segmentos)
 );
 
 Modos mods(
@@ -55,6 +60,12 @@ Modos mods(
     .LED_Medicina(Cable_Niveles_Medicina)
 );
 
-
+display Display_MyM (
+    .clk(clk),
+    .rst(Senal_Reset),
+    .num(Siete_Segmentos),
+    .sseg(sseg),
+    .an(an)
+);
 
 endmodule

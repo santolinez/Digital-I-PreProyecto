@@ -56,7 +56,7 @@ Botones_antirebote utt(.clk(clk),
                         .b_medicina(Bot_Medicina),
                         .sensor_ult_in(Entrada_Animo),
                         .sensor_fot_in(Entrada_Descanso),
-                        .Senal_Reset(B_Reset), 
+                        .reset_tmp(B_Reset), 
                         .Senal_Test(B_Test), 
                         .Senal_Energia(B_Energia), 
                         .Senal_Medicina(B_Medicina),
@@ -64,15 +64,15 @@ Botones_antirebote utt(.clk(clk),
                         .Senal_fot(S_fotocel)
                         );
 
+//Considerar, 
 
 
 
 
-
-Modo_Primitivo #(10) Modo_Animo (.clk(clk), .B_reset(Bot_Reset), .Entrada(S_ultra), .Nivel(Nivel_Animo),.activo(1'b1),.senal_5seg(senal_5segAnimo));
-Modo_Primitivo #(10) Modo_Descanso (.clk(clk), .B_reset(Bot_Reset), .Entrada(S_fotocel), .Nivel(Nivel_Descanso),.activo(1'b1),.senal_5seg(senal_5segDescanso));
-Modo_Primitivo #(10) Modo_Energia (.clk(clk), .B_reset(Bot_Reset), .Entrada(B_Energia), .Nivel(Nivel_Energia),.activo(Activo_Comida),.senal_5seg(senal_5segEnergia));
-Modo_Primitivo #(10) Modo_Medicina (.clk(clk),  .Entrada(B_Medicina), .Nivel(Nivel_Medicina),.activo(Activo_Medicina),.senal_5seg(senal_5segMedicina));
+Modo_Primitivo #(10) Modo_Animo (.clk(clk), .B_reset(B_Reset), .Entrada(S_ultra), .Nivel(Nivel_Animo),.activo(1'b1),.senal_5seg(senal_5segAnimo));
+Modo_Primitivo #(10) Modo_Descanso (.clk(clk), .B_reset(B_Reset), .Entrada(S_fotocel), .Nivel(Nivel_Descanso),.activo(1'b1),.senal_5seg(senal_5segDescanso));
+Modo_Primitivo #(10) Modo_Energia (.clk(clk), .B_reset(B_Reset), .Entrada(B_Energia), .Nivel(Nivel_Energia),.activo(Activo_Comida),.senal_5seg(senal_5segEnergia));
+Modo_Primitivo #(10) Modo_Medicina (.clk(clk), .B_reset(B_Reset),  .Entrada(B_Medicina), .Nivel(Nivel_Medicina),.activo(Activo_Medicina),.senal_5seg(senal_5segMedicina));
 
 
 assign LED_Animo = Nivel_Animo;

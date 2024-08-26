@@ -8,6 +8,9 @@ module Maq_Est_Y_Modos_TB();
     reg Boton_Comida;
     reg Boton_Medicina;
 
+    wire sseg;
+    wire an;
+
 
   
     Maq_Est_Y_Modos  uut(
