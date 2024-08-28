@@ -25,10 +25,14 @@
     output [0:1]LED_Descanso,
     output [0:1]LED_Medicina,
 
-	 output senal_5segEnergia,
-	 output senal_5segMedicina,
+	output senal_5segEnergia,
+	output senal_5segMedicina,
     output senal_5segDescanso,
     output senal_5segAnimo,
+
+    output Senal_Test,
+    output Senal_MTest,
+
     output B_reset
 );
 
@@ -39,7 +43,6 @@ wire [0:1] Nivel_Medicina;
 
 
 wire B_Reset;
-wire B_Test;
 wire B_Energia;
 wire B_Medicina;
 
@@ -57,7 +60,8 @@ Botones_antirebote utt(.clk(clk),
                         .sensor_ult_in(Entrada_Animo),
                         .sensor_fot_in(Entrada_Descanso),
                         .Senal_Reset(B_Reset), 
-                        .Senal_Test(B_Test), 
+                        .Senal_test_activado(Senal_MTest), 
+                        .Senal_Btest_BAR(Senal_MTest),
                         .Senal_Energia(B_Energia), 
                         .Senal_Medicina(B_Medicina),
                         .Senal_ultrasonido(S_ultra),
