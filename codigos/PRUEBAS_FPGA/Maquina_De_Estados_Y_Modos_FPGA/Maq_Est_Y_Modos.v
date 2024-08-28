@@ -1,6 +1,7 @@
 //`include "Maquina_Estados_1.v"
 //`include "Modos.v"
 //`include "display.v"
+//`include "ili9341_top.v"
 module Maq_Est_Y_Modos (
 
     input clk,
@@ -10,7 +11,12 @@ module Maq_Est_Y_Modos (
     input Boton_Medicina,
 
     output [0:6]sseg,
-    output [4:0]an
+    output [4:0]an,
+    output wire spi_mosi,
+    output wire spi_cs,
+    output wire spi_sck,
+    output wire spi_dc  
+
 
 );
 
@@ -33,6 +39,17 @@ wire Senal_Activo_Comida;
 wire Senal_Activo_Medicina;
 
 wire [0:15]Siete_Segmentos;
+
+ili9341_top ili9341(
+.clk(clk),
+.rst(reset),
+.visua(Nivel_Comida),
+.spi_mosi(spi_mosi),
+.spi_cs(spi_cs),
+.spi_sck(spi_sck),
+.spi_dc(spi_dc)
+);
+
 
 
 Maquina_Estados_1 maq_est(
