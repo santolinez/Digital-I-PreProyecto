@@ -14,7 +14,9 @@ module Botones_antirebote(
 	input sensor_fot_in,
 
 	// Salidas
-	output reg Senal_Test,
+
+	output reg Senal_Btest_BAR,
+	output reg Senal_test_activado,
 	output reg Senal_Energia,
 	output reg Senal_Medicina,
 	output reg Senal_Reset,
@@ -23,7 +25,8 @@ module Botones_antirebote(
 );
 
 initial begin
-	Senal_Test=0;
+	Senal_Btest_BAR = 0;
+	Senal_test_activado=0;
 	Senal_Energia=0;
 	Senal_Medicina=0;
 	Senal_Reset=0;
@@ -31,6 +34,7 @@ initial begin
 	Senal_fot=0;
 end
 
+wire testMT_tmp;
 wire test_tmp;
 wire energia_tmp;
 wire medicina_tmp;
@@ -39,9 +43,10 @@ wire sensor_ult_out;
 wire sensor_fot_out;
 
 Boton_AR #(5) B_Reset (.reset(reset), .clk(clk), .boton_in(reset), .boton_out(reset_tmp));  // parametro = 250000000
-Boton_AR #(5) B_Test (.reset(reset), .clk(clk), .boton_in(test), .boton_out(test_tmp));	  // parametro = 250000000
-Boton_AR #(5) B_Medicina (.reset(reset), .clk(clk), .boton_in(b_medicina), .boton_out(medicina_tmp)); // parametro = 50000
-Boton_AR #(5) B_Energia (.reset(reset), .clk(clk), .boton_in(b_energia), .boton_out(energia_tmp)); // parametro = 50000
+Boton_AR #(5) B_MTest (.reset(reset), .clk(clk), .boton_in(test), .boton_out(testMT_tmp));
+Boton_AR #(2) B_Test (.reset(reset), .clk(clk), .boton_in(test), .boton_out(test_tmp));	  // parametro = 250000000
+Boton_AR #(2) B_Medicina (.reset(reset), .clk(clk), .boton_in(b_medicina), .boton_out(medicina_tmp)); // parametro = 50000
+Boton_AR #(2) B_Energia (.reset(reset), .clk(clk), .boton_in(b_energia), .boton_out(energia_tmp)); // parametro = 50000
 Sensor_AR #(10) Sensor_ultrasonido(.reset(reset),.clk(clk) ,.sensor_in(sensor_ult_in) ,.sensor_out(sensor_ult_out));
 Sensor_AR #(10) Sensor_fotocel(.reset(reset),.clk(clk) ,.sensor_in(sensor_fot_in) ,.sensor_out(sensor_fot_out));
 
@@ -55,7 +60,12 @@ always @(posedge sensor_ult_out) begin
 end
 
 always @(posedge test_tmp) begin
-	Senal_Test=~Senal_Test;
+	Senal_Btest_BAR=~Senal_Btest_BAR;
+
+end
+
+always @(posedge testMT_tmp) begin
+	Senal_test_activado=~Senal_test_activado;
 end
 
 always @(posedge energia_tmp) begin
