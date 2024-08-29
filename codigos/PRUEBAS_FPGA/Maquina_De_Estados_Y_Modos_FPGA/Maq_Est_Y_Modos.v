@@ -33,24 +33,25 @@ wire [1:0] Cable_Niveles_Medicina;
 wire [1:0] Cable_Niveles_Comida;
 
 
-// Salidas Estados -- Entradas Modos
+// Salidas Estados -- Entradas Modos/ili
+wire [2:0] Visualizacion;
+
 
 wire Senal_Activo_Comida;
 wire Senal_Activo_Medicina;
 
 wire [0:15]Siete_Segmentos;
 
+
 ili9341_top ili9341(
 .clk(clk),
-.rst(reset),
-.visua(Nivel_Comida),
+.rst(Senal_Reset),
+.visua(Visualizacion),
 .spi_mosi(spi_mosi),
 .spi_cs(spi_cs),
 .spi_sck(spi_sck),
 .spi_dc(spi_dc)
 );
-
-
 
 Maquina_Estados_1 maq_est(
     .clk(clk), 
@@ -60,7 +61,8 @@ Maquina_Estados_1 maq_est(
     .Nivel_Comida(Cable_Niveles_Comida),
     .Activo_Comida(Senal_Activo_Comida),
     .Activo_Medicina(Senal_Activo_Medicina),
-    .Salida_7seg(Siete_Segmentos)
+    .Salida_7seg(Siete_Segmentos),
+	 .Visualizacion(Visualizacion)
 );
 
 Modos mods(

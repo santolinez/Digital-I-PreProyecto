@@ -36,7 +36,7 @@ wire medicina_tmp;
 wire sensor_ult_out;
 wire sensor_fot_out;
 
-Sensor_AR #(250000000) B_Reset ( .clk(clk), .sensor_in(reset), .sensor_out(reset_tmp));  // parametro = 250000000
+Sensor_AR #(250000000) B_Reset (.reset(1'b1),.clk(clk), .sensor_in(reset), .sensor_out(reset_tmp));  // parametro = 250000000
 Boton_AR #(250000000) B_Test (.reset(reset), .clk(clk), .boton_in(test), .boton_out(test_tmp));	  // parametro = 250000000
 Boton_AR #(10000) B_Medicina (.reset(reset), .clk(clk), .boton_in(b_medicina), .boton_out(medicina_tmp)); // parametro = 50000
 Boton_AR #(10000) B_Energia (.reset(reset), .clk(clk), .boton_in(b_energia), .boton_out(energia_tmp)); // parametro = 50000

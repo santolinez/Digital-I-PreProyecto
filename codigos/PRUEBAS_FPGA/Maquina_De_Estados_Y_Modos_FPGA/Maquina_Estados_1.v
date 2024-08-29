@@ -7,7 +7,7 @@ module Maquina_Estados_1 (
     input Boton_Medicina,
     input Sensor_UltraSonido,
     input Sensor_Luz,
-    output reg [1:0] Visualizacion,
+    output reg [2:0] Visualizacion,
 
     output reg Activo_Comida,
     output reg Activo_Medicina,
@@ -22,13 +22,13 @@ module Maquina_Estados_1 (
     
 
     // Declaración de estados
-    reg [1:0] Estados;
-    reg [1:0] Estado_Siguiente;
+    reg [2:0] Estados;
+    reg [2:0] Estado_Siguiente;
 
-    localparam Estado_IDLE = 2'b00;
-    localparam Estado_Hambre = 2'b01;
-    localparam Estado_Desnutrido = 2'b10;
-    localparam Estado_Comiendo = 2'b11;
+    localparam Estado_IDLE = 3'b000;
+    localparam Estado_Hambre = 3'b001;
+    localparam Estado_Desnutrido = 3'b010;
+    localparam Estado_Comiendo = 3'b011;
 
 
     // Inicialización
@@ -37,7 +37,7 @@ module Maquina_Estados_1 (
         Estado_Siguiente <= Estado_IDLE;
         Activo_Comida = 1'b1;
         Activo_Medicina = 1'b1;
-        Visualizacion = 2'b00;
+        Visualizacion = 3'b000;
         Salida_7seg = 0;
     end
 
@@ -81,7 +81,7 @@ module Maquina_Estados_1 (
                     Estado_Siguiente <= Estado_Comiendo;  // Mantenerse en Estado_Comiendo mientras Boton_Comida esté activo
                 else if (Nivel_Comida == 3)
                     Estado_Siguiente <= Estado_IDLE;
-                else if (Nivel_Comida > 1)
+                else if (Nivel_Comida > 0)
                     Estado_Siguiente <= Estado_Hambre;
                 else
                     Estado_Siguiente <= Estado_Desnutrido;
@@ -97,31 +97,31 @@ module Maquina_Estados_1 (
         if (~reset) begin
             Activo_Comida <= 1'b1;
             Activo_Medicina <= 1'b1;
-            Visualizacion <= 2'b00;
+            Visualizacion <= 3'b000;
         end else begin
             case (Estado_Siguiente)
                 Estado_IDLE: begin 
                     Activo_Comida <= 1'b1;
                     Activo_Medicina <= 1'b1;
-                    Visualizacion <= 2'b00;
+                    Visualizacion <= 3'b000;
                 end
 
                 Estado_Hambre: begin 
                     Activo_Comida <= 1'b1;
                     Activo_Medicina <= 1'b1;
-                    Visualizacion <= 2'b01;
+                    Visualizacion <= 3'b001;
                 end
 
                 Estado_Desnutrido: begin 
                     Activo_Comida <= 1'b1;
                     Activo_Medicina <= 1'b1;
-                    Visualizacion <= 2'b10;
+                    Visualizacion <= 3'b010;
                 end
 
                 Estado_Comiendo: begin
                     Activo_Comida <= 1'b0;
                     Activo_Medicina <= 1'b0;
-                    Visualizacion <= 2'b11;
+                    Visualizacion <= 3'b011;
                 end
             endcase
         end
