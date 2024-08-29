@@ -1,7 +1,7 @@
 `include "ili9341_controller.v"
 `include "freq_divider.v"
 
-module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, parameter IMAGENES = 5)(
+module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 6, parameter IMAGENES = 5)(
     input wire clk, // 125MHz
     input wire rst,
     input wire [2:0] visua,
@@ -14,13 +14,15 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
     wire clk_out;
     wire clk_input_data;
     reg [2:0] prev_visua;
-    reg [2:0] fsm_state, next_state;
+    reg [2:0] fsm_state, next_state, escalamiento;
     reg [PIXEL_SIZE-1:0] imagen;
     reg [PIXEL_SIZE-1:0] current_pixel;
     reg [PIXEL_SIZE-1:0] pixel_data_mem[0:RESOLUTION-1];
 
     reg [$clog2(RESOLUTION)-1:0] pixel_counter;
+    reg [$clog2(RESOLUTION)-1:0] pixel_memoria;
     reg transmission_done,Nueva_imagen;
+    reg [1:0]counter_horizontal,counter_vertical;
 
     localparam IDLE = 0;
     localparam TRISTE = 1;
@@ -32,8 +34,14 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
         imagen <= 'h07FF;
         fsm_state <= IDLE;
         pixel_counter <= 'b0;
-            transmission_done <= 'b0;
-            current_pixel <= 'b0;
+        transmission_done <= 'b0;
+        current_pixel <= 'b0;
+        pixel_memoria <= 'b0;
+        $readmemh("C:/Users/otro/Documents/Mecatronica/6-Sexto-Semestre/DigitalI/Proyecto/ILI/PolloBorroso_80x80.txt", pixel_data_mem);
+        escalamiento <='d0;
+        counter_horizontal<= 'b0;
+        counter_vertical<= 'b0;
+
     end
 
     freq_divider #(1) freq_divider20MHz (
@@ -63,9 +71,11 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
     end
 
 
-    always @(posedge clk_out) begin
+    always @(posedge clk_input_data) begin
         if (!rst) begin
-            imagen <= 'h001F; // Azul oscuro
+            escalamiento <='d0;
+            counter_horizontal<= 'b0;
+            counter_vertical<= 'b0;
         end else begin
             if (visua != prev_visua) begin
                 Nueva_imagen <= 1'b1; // Hold high until acted upon
@@ -74,7 +84,43 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
             end 
             prev_visua <= visua;
             case(fsm_state)
-                IDLE: imagen <= 'hFFE0; // Amarillo
+                IDLE: begin
+                        case(escalamiento)
+                        'd0: begin
+                            imagen <= pixel_data_mem[pixel_memoria];
+                            counter_horizontal <= counter_horizontal+1;
+                            if(counter_horizontal==3)
+                            begin 
+                                escalamiento<= 'd1;
+                            end
+                        end
+                        'd1: begin
+                            pixel_memoria<=pixel_memoria+'b1;
+                            if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
+                                counter_vertical<=counter_vertical+'b1;
+                                if(counter_vertical==3)begin 
+                                    escalamiento<= 'd3; 
+                                end else begin 
+                                    escalamiento<= 'd2; 
+                                end
+                            end else begin
+                                counter_horizontal <= 'b0;
+                                escalamiento<= 'd0;
+                            end
+                        end
+                        'd2: begin
+                            pixel_memoria<=pixel_memoria-'d80;
+                            counter_horizontal <= 'b0;
+                            escalamiento<= 'd0;
+                        end
+                        'd3: begin
+                            pixel_memoria<=pixel_memoria+'b1;
+                            counter_vertical<=0;
+                            counter_horizontal <= 'b0;
+                            escalamiento<= 'd0;
+                        end
+                    endcase   
+                end
                 TRISTE: imagen <= 'h07FF; // Azul clarito
                 CARINO: imagen <= 'hF800; // Rojo
                 DEPRIMIDO: imagen <= 'h780F; // Morado
@@ -85,7 +131,7 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, pa
     end
 
 
-    always @(posedge clk_input_data) begin
+    always @(negedge clk_input_data) begin
         if (!rst) begin
             pixel_counter <= 'b0;
             transmission_done <= 'b0;
