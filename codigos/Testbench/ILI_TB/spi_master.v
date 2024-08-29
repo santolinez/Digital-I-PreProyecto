@@ -1,4 +1,4 @@
-module spi_master#(parameter DATA_SIZE = 9)(
+module spi_master#(parameter DATA_SIZE = 4)(
     input wire  clk,
     input wire  rst, 
     input wire  [DATA_SIZE-1:0] input_data, 
@@ -33,7 +33,7 @@ assign spi_sck = sck_reg & cs_reg;
 assign spi_cs = !cs_reg; 
 
 always @ (posedge clk) begin
-    if(rst==0) begin
+    if(!rst) begin
         sck_reg <= 1'b1;
         data_reg <= 1'b0;
         data_bit_counter <= 1'b0;
