@@ -1,4 +1,4 @@
-module spi_master#(parameter DATA_SIZE = 4)(
+module spi_master#(parameter DATA_SIZE = 9)(
     input wire  clk,
     input wire  rst, 
     input wire  [DATA_SIZE-1:0] input_data, 
