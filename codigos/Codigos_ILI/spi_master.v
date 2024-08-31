@@ -32,8 +32,8 @@ wire[0:DATA_SIZE-2] real_data = data_reg[DATA_SIZE-2:0];
 assign spi_sck = sck_reg & cs_reg; 
 assign spi_cs = !cs_reg; 
 
-always @ (posedge clk, posedge rst) begin
-    if(rst) begin
+always @ (posedge clk) begin
+    if(!rst) begin
         sck_reg <= 1'b1;
         data_reg <= 1'b0;
         data_bit_counter <= 1'b0;
