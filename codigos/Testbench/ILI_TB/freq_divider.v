@@ -7,7 +7,7 @@ module freq_divider #(parameter DIVIDER = 1)(
     reg [$clog2(DIVIDER)-1:0] counter; 
 
     always @(posedge clk) begin
-        if (rst==0) begin
+        if (!rst) begin
             counter <= 'b0;
             clk_out <= 'b0;
         end else begin
