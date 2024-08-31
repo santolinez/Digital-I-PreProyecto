@@ -1,7 +1,7 @@
 `include "ili9341_controller.v"
 `include "freq_divider.v"
 
-module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 6, parameter IMAGENES = 5)(
+module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 16, parameter IMAGENES = 5)(
     input wire clk, // 125MHz
     input wire rst,
     input wire [2:0] visua,
@@ -89,7 +89,7 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 6, par
                         'd0: begin
                             imagen <= pixel_data_mem[pixel_memoria];
                             counter_horizontal <= counter_horizontal+1;
-                            if(counter_horizontal==3)
+                            if(counter_horizontal==1)
                             begin 
                                 escalamiento<= 'd1;
                             end
@@ -98,7 +98,7 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 6, par
                             pixel_memoria<=pixel_memoria+'b1;
                             if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
                                 counter_vertical<=counter_vertical+'b1;
-                                if(counter_vertical==3)begin 
+                                if(counter_vertical==1)begin 
                                     escalamiento<= 'd3; 
                                 end else begin 
                                     escalamiento<= 'd2; 
@@ -131,7 +131,7 @@ module ili9341_top #(parameter RESOLUTION = 10*10, parameter PIXEL_SIZE = 6, par
     end
 
 
-    always @(negedge clk_input_data) begin
+    always @(posedge clk_input_data) begin
         if (!rst) begin
             pixel_counter <= 'b0;
             transmission_done <= 'b0;
