@@ -1,4 +1,3 @@
-
 module Maquina_Estados_1 (
     input clk,
     input reset,
@@ -40,7 +39,7 @@ module Maquina_Estados_1 (
     initial begin
         cambio_test=3'b000;
         flanco_test=1'b0;
-		  B_test_prev_prev=1'b0;
+		B_test_prev_prev=1'b0;
         B_test_prev=1'b0;//tener cuidado al usar los rst
         Estados <= Estado_IDLE;
         Estado_Siguiente <= Estado_IDLE;
@@ -67,7 +66,7 @@ module Maquina_Estados_1 (
             Estado_IDLE: begin
                 if (((Nivel_Comida < 3)&(~Senal_MTest))||((Senal_MTest)&(cambio_test==1)))
                     Estado_Siguiente <= Estado_Hambre;//para tener en cuenta, cuando se agregue más estados toca poner la variable parametro para el test, es la que ayuda al test a saber porque estados ya paso
-                else
+                else 
                     Estado_Siguiente <= Estado_IDLE;
             end
 
@@ -76,26 +75,28 @@ module Maquina_Estados_1 (
                     Estado_Siguiente <= Estado_Desnutrido;
                 else if (Boton_Comida & (~Senal_MTest))
                     Estado_Siguiente <= Estado_Comiendo;
-                else if(~Senal_MTest)
+                else 
                     Estado_Siguiente <= Estado_Hambre;
             end
 
             Estado_Desnutrido: begin
                 if (((Boton_Comida)&(~Senal_MTest))||((Senal_MTest)&(cambio_test==3)))
                     Estado_Siguiente <= Estado_Comiendo;
-                else if(~Senal_MTest)
+                else 
                     Estado_Siguiente <= Estado_Desnutrido;
             end
 
             Estado_Comiendo: begin
-                if (Boton_Comida&(~Senal_MTest))
-                    Estado_Siguiente <= Estado_Comiendo;  // Mantenerse en Estado_Comiendo mientras Boton_Comida esté activo
-                else if (((Nivel_Comida == 3)&(~Senal_MTest))||((Senal_MTest)&(cambio_test==0)))
+				    if (((Nivel_Comida == 3)&(~Senal_MTest))||((Senal_MTest)&(cambio_test==0)))
                     Estado_Siguiente <= Estado_IDLE;
+                else if (Boton_Comida&(~Senal_MTest))
+                    Estado_Siguiente <= Estado_Comiendo;  // Mantenerse en Estado_Comiendo mientras Boton_Comida esté activo
                 else if ((Nivel_Comida > 1)&(~Senal_MTest))
                     Estado_Siguiente <= Estado_Hambre;
                 else if(~Senal_MTest)
                     Estado_Siguiente <= Estado_Desnutrido;
+					 else 
+						  Estado_Siguiente <= Estado_Comiendo;
             end
 
             default: Estado_Siguiente <= Estado_IDLE;
@@ -104,14 +105,17 @@ module Maquina_Estados_1 (
     end
 
 	 // Logica de contador test
-//always @(posedge Senal_Test) begin
-	  //flanco_test<=~(B_test_prev==Senal_Test);
-	//  B_test_prev<=Senal_Test;
-			  
-//end
-always @(negedge Senal_Test_fil) begin
-			 cambio_test=cambio_test+1; 
-end
+    always @(negedge Senal_Test_fil or negedge reset) begin
+        if (~reset) begin 
+            cambio_test <= 0;
+        end else if (Senal_MTest) begin
+            if (cambio_test < 3)begin
+                cambio_test=cambio_test+1; 
+                end else begin
+                    cambio_test <= 0;
+                end
+        end
+    end
 		 // Lógica secuencial para las salidas
 
 		 always @(posedge clk or negedge reset) begin
