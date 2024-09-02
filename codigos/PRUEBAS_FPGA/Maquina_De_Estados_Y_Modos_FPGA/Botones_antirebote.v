@@ -14,34 +14,40 @@ module Botones_antirebote(
 	input sensor_fot_in,
 
 	// Salidas
-	output reg Senal_Test,
+
+	output reg Senal_Btest_BAR,
+	output reg Senal_test_activado,
 	output reg Senal_Energia,
 	output reg Senal_Medicina,
 	output reset_tmp,
+	output senal_test_fil,
 	output reg Senal_fot,
 	output reg Senal_ultrasonido
 );
 
 initial begin
-	Senal_Test=0;
+	Senal_Btest_BAR = 0;
+	Senal_test_activado=0;
 	Senal_Energia=0;
 	Senal_Medicina=0;
 	Senal_ultrasonido=0;
 	Senal_fot=0;
 end
 
+wire testMT_tmp;
 wire test_tmp;
 wire energia_tmp;
 wire medicina_tmp;
 wire sensor_ult_out;
 wire sensor_fot_out;
 
-Sensor_AR #(250000000) B_Reset (.reset(1'b1),.clk(clk), .sensor_in(reset), .sensor_out(reset_tmp));  // parametro = 250000000
-Boton_AR #(250000000) B_Test (.reset(reset), .clk(clk), .boton_in(test), .boton_out(test_tmp));	  // parametro = 250000000
-Boton_AR #(10000) B_Medicina (.reset(reset), .clk(clk), .boton_in(b_medicina), .boton_out(medicina_tmp)); // parametro = 50000
-Boton_AR #(10000) B_Energia (.reset(reset), .clk(clk), .boton_in(b_energia), .boton_out(energia_tmp)); // parametro = 50000
-Sensor_AR #(250000000) Sensor_ultrasonido(.reset(reset),.clk(clk) ,.sensor_in(sensor_ult_in) ,.sensor_out(sensor_ult_out));
-Sensor_AR #(250000000) Sensor_fotocel(.reset(reset),.clk(clk) ,.sensor_in(sensor_fot_in) ,.sensor_out(sensor_fot_out));
+Sensor_AR #(250000000) B_Reset (.reset(1'b1), .clk(clk), .sensor_in(reset), .sensor_out(reset_tmp));  // parametro = 250000000
+Boton_AR #(250000000) B_MTest (.reset(reset_tmp), .clk(clk), .boton_in(test), .boton_out(testMT_tmp));
+Boton_AR #(10000) B_Test (.reset(reset_tmp), .clk(clk), .boton_in(test), .boton_out(test_tmp));	  // parametro = 250000000
+Boton_AR #(10000) B_Medicina (.reset(reset_tmp), .clk(clk), .boton_in(b_medicina), .boton_out(medicina_tmp)); // parametro = 50000
+Boton_AR #(10000) B_Energia (.reset(reset_tmp), .clk(clk), .boton_in(b_energia), .boton_out(energia_tmp)); // parametro = 50000
+Sensor_AR #(250000000) Sensor_ultrasonido(.reset(reset_tmp),.clk(clk) ,.sensor_in(sensor_ult_in) ,.sensor_out(sensor_ult_out));
+Sensor_AR #(250000000) Sensor_fotocel(.reset(reset_tmp),.clk(clk) ,.sensor_in(sensor_fot_in) ,.sensor_out(sensor_fot_out));
 
 
 always @(negedge sensor_fot_out) begin
@@ -53,7 +59,16 @@ always @(negedge sensor_ult_out) begin
 end
 
 always @(negedge test_tmp) begin
-	Senal_Test=~Senal_Test;
+	Senal_Btest_BAR=~Senal_Btest_BAR;
+
+end
+
+always @(negedge testMT_tmp or negedge reset_tmp) begin
+	if(reset_tmp == 0) begin
+		Senal_test_activado = 0;
+	end else begin
+		Senal_test_activado=~Senal_test_activado;
+	end
 end
 
 always @(negedge energia_tmp) begin
@@ -64,11 +79,11 @@ always @(negedge medicina_tmp) begin
 	Senal_Medicina=~Senal_Medicina;
 end
 
-/* 
-always @(negedge reset_tmp) begin
-	Senal_Reset=~Senal_Reset;
-end  
-*/
 
-
+// NOTAS REVISAR SI ESTE RESET_TMP DEBERIA ESTAR CONECTADO A TODO
+//always @(negedge reset_tmp) begin
+	//Senal_test_activado=0;
+//end 
+//
+assign senal_test_fil=test_tmp;
 endmodule

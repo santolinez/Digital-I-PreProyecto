@@ -6,7 +6,7 @@ module Maq_Est_Y_Modos (
 
     input clk,
     input reset,
-
+    input Boton_Test,
     input Boton_Comida,
     input Boton_Medicina,
 
@@ -15,7 +15,10 @@ module Maq_Est_Y_Modos (
     output wire spi_mosi,
     output wire spi_cs,
     output wire spi_sck,
-    output wire spi_dc  
+    output wire spi_dc ,
+	 output led_mt,
+	 output led_t,
+	 output led_ft
 
 
 );
@@ -27,7 +30,9 @@ wire Senal_Reset;
 
 wire Senal_5Seg_Comida;
 wire Senal_5Seg_Medicina;
-
+wire Senal_Test;
+wire Senal_MTest;
+wire Senal_Test_fil;
 
 wire [1:0] Cable_Niveles_Medicina;
 wire [1:0] Cable_Niveles_Comida;
@@ -56,18 +61,23 @@ ili9341_top ili9341(
 Maquina_Estados_1 maq_est(
     .clk(clk), 
     .reset(Senal_Reset),
+	 .Senal_Test_fil(Senal_Test_fil),
+    .Senal_Test(Senal_Test),
+    .Senal_MTest(Senal_MTest),
     .Boton_Comida(Senal_5Seg_Comida),
     .Boton_Medicina(Senal_5Seg_Medicina),
     .Nivel_Comida(Cable_Niveles_Comida),
     .Activo_Comida(Senal_Activo_Comida),
     .Activo_Medicina(Senal_Activo_Medicina),
     .Salida_7seg(Siete_Segmentos),
-	 .Visualizacion(Visualizacion)
+	 .Visualizacion(Visualizacion),
+	 	 .l_flanco_test(led_ft)
 );
 
 Modos mods(
     .clk(clk),
     .Bot_Reset(reset),
+    .Bot_Test(Boton_Test),
     .Bot_Energia(Boton_Comida),
     .Bot_Medicina(Boton_Medicina),
     .Reset_General(Senal_Reset),
@@ -76,7 +86,10 @@ Modos mods(
     .Activo_Comida(Senal_Activo_Comida),
     .Activo_Medicina(Senal_Activo_Medicina),
     .LED_Energia(Cable_Niveles_Comida),
-    .LED_Medicina(Cable_Niveles_Medicina)
+    .LED_Medicina(Cable_Niveles_Medicina),
+    .Senal_Test(Senal_Test),
+    .Senal_MTest(Senal_MTest),
+	 .Senal_Test_fil(Senal_Test_fil)
 );
 
 display Display_MyM (
@@ -87,4 +100,7 @@ display Display_MyM (
     .an(an)
 );
 
-endmodule
+assign led_mt=Senal_MTest;
+assign led_t=Senal_Test;
+
+endmodule 

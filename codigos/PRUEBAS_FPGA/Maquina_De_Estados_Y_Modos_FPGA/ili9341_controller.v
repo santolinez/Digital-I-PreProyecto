@@ -1,5 +1,4 @@
 //`include "spi_master.v"
-
 module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, parameter PIXEL_SIZE = 16)(
         input  wire clk,    
         input  wire rst,
