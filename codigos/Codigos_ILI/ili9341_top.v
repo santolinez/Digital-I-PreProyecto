@@ -85,7 +85,6 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
             prev_visua <= visua;
             case(fsm_state)
                 IDLE: begin
-                    escalamiento <='d0;
                         case(escalamiento)
                         'd0:begin
                             counter_horizontal <= 'b0;
@@ -126,10 +125,58 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
                             counter_horizontal <= 'b0;
                             escalamiento<= 'd1;
                         end
-
                     endcase    
                 end
-                TRISTE: imagen <= 'h07FF; // Azul clarito
+                TRISTE: begin
+                    escalamiento <='d0;
+                        case(escalamiento)
+                        'd0:begin
+                            counter_horizontal <= 'b0;
+                            counter_vertical <= 'b0;
+                            pixel_memoria <= 'b0;
+                            escalamiento<= 'd1;
+                        end
+                        'd1: begin
+                            imagen <= pixel_data_mem[pixel_memoria];
+                            counter_horizontal <= counter_horizontal+1;
+                            if(counter_horizontal==1)
+                            begin 
+                                escalamiento<= 'd2;
+                            end
+                        end
+                        'd2: begin
+                            pixel_memoria<=pixel_memoria+'b1;
+                            if(pixel_memoria==3041)begin 
+                                pixel_memoria<=6401
+                            end
+                            if(pixel_memoria==3841)begin 
+                                pixel_memoria<=7201
+                            end
+                            if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
+                                counter_vertical<=counter_vertical+'b1;
+                                if(counter_vertical==2)begin 
+                                    escalamiento<= 'd4; 
+                                end else begin 
+                                    escalamiento<= 'd3; 
+                                end
+                            end else begin
+                                counter_horizontal <= 'b0;
+                                escalamiento<= 'd1;
+                            end
+                        end
+                        'd3: begin
+                            pixel_memoria<=pixel_memoria-'d80;
+                            counter_horizontal <= 'b0;
+                            escalamiento<= 'd1;
+                        end
+                        'd4: begin
+                            pixel_memoria<=pixel_memoria+'b1;
+                            counter_vertical<=0;
+                            counter_horizontal <= 'b0;
+                            escalamiento<= 'd1;
+                        end
+                    endcase    
+                end
                 CARINO: imagen <= 'hF800; // Rojo
                 DEPRIMIDO: imagen <= 'h780F; // Morado
                 MUERTO: imagen <= 'h0000; // Negro
