@@ -85,6 +85,9 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
             prev_visua <= visua;
             case(fsm_state)
                 IDLE: begin
+                    if(transmission_done)
+                    begin escalamiento<= 'd0;
+                    end
                         case(escalamiento)
                         'd0:begin
                             counter_horizontal <= 'b0;
@@ -125,10 +128,19 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
                             counter_horizontal <= 'b0;
                             escalamiento<= 'd1;
                         end
+                        'd5:begin
+                            counter_horizontal <= 'b0;
+                            counter_vertical <= 'b0;
+                            pixel_memoria <= 'b0; 
+                            escalamiento<= 'd0;
+                        end
+
                     endcase    
                 end
-                TRISTE: begin
-                    escalamiento <='d0;
+                TRISTE:  begin
+                    if(transmission_done)
+                    begin escalamiento<= 'd0;
+                    end
                         case(escalamiento)
                         'd0:begin
                             counter_horizontal <= 'b0;
@@ -147,10 +159,10 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
                         'd2: begin
                             pixel_memoria<=pixel_memoria+'b1;
                             if(pixel_memoria==3041)begin 
-                                pixel_memoria<=6401
+                                pixel_memoria<=6401;
                             end
-                            if(pixel_memoria==3841)begin 
-                                pixel_memoria<=7201
+                            if(pixel_memoria==7201)begin 
+                                pixel_memoria<=3841;
                             end
                             if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
                                 counter_vertical<=counter_vertical+'b1;
