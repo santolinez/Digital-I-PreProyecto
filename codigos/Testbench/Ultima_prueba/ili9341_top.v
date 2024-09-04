@@ -1,10 +1,10 @@
-//`include "ili9341_controller.v"
-//`include "freq_divider.v"
+`include "ili9341_controller.v"
+`include "freq_divider.v"
 
 module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, parameter IMAGENES = 5)(
     input wire clk, // 125MHz
     input wire rst,
-    input wire [2:0] visua,
+    input wire [3:0] visua,
     output wire spi_mosi,
     output wire spi_cs,
     output wire spi_sck,
