@@ -17,7 +17,7 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
     reg [3:0] fsm_state, next_state, escalamiento;
     reg [PIXEL_SIZE-1:0] imagen;
     reg [PIXEL_SIZE-1:0] current_pixel;
-    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:(100*60)-1];
+    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:(100*70)-1];
 
 
     reg [$clog2(RESOLUTION)-1:0] pixel_counter;
@@ -26,10 +26,19 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
     reg [7:0]counter_horizontal,counter_vertical;
 
     localparam IDLE = 0;
-    localparam TRISTE = 1;
-    localparam CARINO = 2;
-    localparam DEPRIMIDO = 3;
-    localparam MUERTO = 4;
+    localparam HAMBRE=1;
+    localparam DESNUTRIDO=2;
+    localparam COMIENDO=3;
+    localparam TOS=4;
+    localparam FIEBRE=5;
+    localparam PILDORA=6;
+    localparam CANSADO=7;
+    localparam DESVELO=8;
+    localparam DORMIDO=9;
+    localparam TRISTE= 10;
+    localparam DEPRESION= 11;
+    localparam CARISIA= 12;
+    localparam MUERTO= 13;
 
     initial begin 
         fsm_state <= IDLE;
@@ -37,7 +46,7 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
         transmission_done <= 'b0;
         current_pixel <= 'b0;
         pixel_memoria <= 'b0;
-        $readmemh("C:/Users/otro/Documents/Mecatronica/6-Sexto-Semestre/DigitalI/Proyecto/ILI/PolloBorroso_80x80.txt", pixel_data_mem);
+        $readmemh("C:/Users/otro/Documents/Mecatronica/6-Sexto-Semestre/DigitalI/Proyecto/ILI/Imagenes.txt", pixel_data_mem);
         imagen <= pixel_data_mem[0];
         escalamiento <='d0;
         counter_horizontal<= 'b0;
@@ -64,10 +73,19 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
     always @(*) begin
         case(visua)
             0: next_state = IDLE;
-            1: next_state = TRISTE;
-            2: next_state = CARINO;
-            3: next_state = DEPRIMIDO;
-            4: next_state = MUERTO;
+            1: next_state = HAMBRE;
+            2: next_state = DESNUTRIDO;
+            3: next_state = COMIENDO;
+            4: next_state = TOS;
+            5: next_state = FIEBRE;
+            6: next_state = PILDORA;
+            7: next_state = CANSADO;
+            8: next_state = DESVELO;
+            9: next_state = DORMIDO;
+            10: next_state = TRISTE;
+            11: next_state = DEPRESION;
+            12: next_state = CARISIA;
+            13: next_state = MUERTO;
             default: next_state = IDLE;
         endcase
     end
@@ -106,21 +124,84 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
 
             case(fsm_state)
                 IDLE: offset<=0;
-                TRISTE:  begin
+                HAMBRE:  begin
+                if (pixelactual >= 28800 && pixelactual < 33600) begin
+                    offset <= 2305 - 1152;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                DESNUTRIDO:  begin
+                if (pixelactual >= 27600 && pixelactual < 40800) begin
+                    offset <= 2498 - 1104;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                COMIENDO:   begin
+                if (pixelactual >= 2400 && pixelactual < 55200) begin
+                    offset <= 3027 - 96;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                TOS:   begin
+                if (pixelactual >= 25200 && pixelactual < 33600) begin
+                    offset <= 5140 - 1008;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                FIEBRE:   begin
+                if (pixelactual >= 18000 && pixelactual < 33600) begin
+                    offset <= 5477 - 720;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                PILDORA:   begin
+                if (pixelactual >= 28800 && pixelactual < 34800) begin
+                    offset <= 6102 - 1152;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                CANSADO:   begin
+                if (pixelactual >= 20400 && pixelactual < 28800) begin
+                    offset <= 6343 - 810;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                 DESVELO:   begin
                 if (pixelactual >= 29760 && pixelactual < 35520) begin
                     offset <= 3601 - 1860;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
-                CARINO:  begin
+                 DORMIDO:   begin
                 if (pixelactual >= 29760 && pixelactual < 35520) begin
                     offset <= 3601 - 1860;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
-                DEPRIMIDO:   begin
+                 TRISTE:   begin
+                if (pixelactual >= 29760 && pixelactual < 35520) begin
+                    offset <= 3601 - 1860;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                 DEPRESION:   begin
+                if (pixelactual >= 29760 && pixelactual < 35520) begin
+                    offset <= 3601 - 1860;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                 CARISIA:   begin
                 if (pixelactual >= 29760 && pixelactual < 35520) begin
                     offset <= 3601 - 1860;  // Apply the desired offset
                 end else begin
@@ -139,7 +220,7 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
         end
     end
     always @(posedge clk_out)begin
-    pixel_memoria <= ((counter_horizontal / 4) + (counter_vertical / 4) * 60) + offset;
+    pixel_memoria <= ((counter_horizontal / 5) + (counter_vertical / 5) * 48) + offset;
     imagen <= pixel_data_mem[pixel_memoria];
     end 
 
