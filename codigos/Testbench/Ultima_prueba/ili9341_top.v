@@ -1,5 +1,5 @@
-`include "ili9341_controller.v"
-`include "freq_divider.v"
+//`include "ili9341_controller.v"
+//`include "freq_divider.v"
 
 module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, parameter IMAGENES = 5)(
     input wire clk, // 125MHz
@@ -13,8 +13,8 @@ module ili9341_top #(parameter RESOLUTION = 320*240, parameter PIXEL_SIZE = 16, 
 
     wire clk_out;
     wire clk_input_data;
-    reg [2:0] prev_visua;
-    reg [2:0] fsm_state, next_state;
+    reg [3:0] prev_visua;
+    reg [3:0] fsm_state, next_state;
     reg [PIXEL_SIZE-1:0] imagen;
     reg [PIXEL_SIZE-1:0] current_pixel;
     reg [PIXEL_SIZE-1:0] pixel_data_mem[0:RESOLUTION-1];

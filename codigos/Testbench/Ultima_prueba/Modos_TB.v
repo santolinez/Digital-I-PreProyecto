@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-`include "Modos.v"
 
 module Modos_TB;
 

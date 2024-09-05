@@ -1,5 +1,3 @@
-`include "Maq_Est_Y_Modos.v"
-
 module Maq_Est_Y_Modos_TB();
     
     reg clk;
@@ -7,12 +5,8 @@ module Maq_Est_Y_Modos_TB();
 
     reg Boton_Comida;
     reg Boton_Medicina;
-
-    reg Animo_Ultra;
-    reg Descanso_Celda;
-
     reg Boton_Test;    
-
+    
     wire sseg;
     wire an;
 
@@ -21,11 +15,9 @@ module Maq_Est_Y_Modos_TB();
     Maq_Est_Y_Modos  uut(
         .clk(clk),
         .reset(reset),
-        .Boton_Test(Boton_Test),
         .Boton_Comida(Boton_Comida),
-        .Boton_Medicina(Boton_Medicina),
-        .Ultra_sonido(Animo_Ultra),
-        .Foto_celda(Descanso_Celda)
+        .Boton_Medicina(Bot_Medicina),
+        .Boton_Test(Boton_Test)
     );
 
     initial begin
@@ -33,17 +25,33 @@ module Maq_Est_Y_Modos_TB();
         reset = 1;
         Boton_Comida = 0;
         Boton_Medicina = 0;
-
-        /*Lo que se hizo con senal_test_filtrado hacer lo mimso con MTest*/
+        Boton_Test=1;
+        #10
+        Boton_Test=0;
+        #30
+        Boton_Test=1;
+        #15
+        Boton_Test=0;
+        #15
+        Boton_Test=1;
+        #15
+        Boton_Test=0;
+        #15 
+        Boton_Test=1;
+        #15
+        Boton_Test=0;
+        #15 
+        Boton_Test=1;
+        
+       
+        
 
     end 
 
     always #1 clk = ~clk;
     always #500 reset = ~reset;
-    always #15 Boton_Comida = ~Boton_Comida;
-    always #25 Boton_Medicina = ~Boton_Medicina;
-    always #25 Animo_Ultra = ~Animo_Ultra;
-    always #10 Descanso_Celda = ~Descanso_Celda;
+    always #25 Boton_Comida = ~Boton_Comida;
+    always #35 Boton_Medicina = ~Boton_Medicina;
   
     initial begin: TEST_CASE
         $dumpfile("Maq_Est_Y_Modos.vcd");
