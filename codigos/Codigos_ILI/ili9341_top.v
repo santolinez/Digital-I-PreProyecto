@@ -17,12 +17,13 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
     reg [3:0] fsm_state, next_state, escalamiento;
     reg [PIXEL_SIZE-1:0] imagen;
     reg [PIXEL_SIZE-1:0] current_pixel;
-    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:RESOLUTION-1];
+    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:(160*80)-1];
+
 
     reg [$clog2(RESOLUTION)-1:0] pixel_counter;
-    reg [$clog2(RESOLUTION)-1:0] pixel_memoria;
+    reg [$clog2(RESOLUTION)-1:0] pixelactual, pixel_memoria, offset;
     reg transmission_done,Nueva_imagen;
-    reg [1:0]counter_horizontal,counter_vertical;
+    reg [7:0]counter_horizontal,counter_vertical;
 
     localparam IDLE = 0;
     localparam TRISTE = 1;
@@ -31,17 +32,18 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
     localparam MUERTO = 4;
 
     initial begin 
-        imagen <= 'h07FF;
         fsm_state <= IDLE;
         pixel_counter <= 'b0;
         transmission_done <= 'b0;
         current_pixel <= 'b0;
         pixel_memoria <= 'b0;
         $readmemh("C:/Users/otro/Documents/Mecatronica/6-Sexto-Semestre/DigitalI/Proyecto/ILI/PolloBorroso_80x80.txt", pixel_data_mem);
+        imagen <= pixel_data_mem[0];
         escalamiento <='d0;
         counter_horizontal<= 'b0;
         counter_vertical<= 'b0;
-
+        offset<= 'b0;
+        pixelactual<= 'b0;
     end
 
     freq_divider #(2) freq_divider20MHz (
@@ -73,9 +75,10 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
 
     always @(posedge clk_input_data) begin
         if (!rst) begin
-            escalamiento <='d0;
             counter_horizontal<= 'b0;
             counter_vertical<= 'b0;
+            offset<= 'b0;
+            pixelactual<= 'b0;
         end else begin
             if (visua != prev_visua) begin
                 Nueva_imagen <= 1'b1; // Hold high until acted upon
@@ -83,273 +86,38 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
                 Nueva_imagen <= 1'b0;
             end 
             prev_visua <= visua;
+            counter_horizontal<=counter_horizontal+1; 
+            if(counter_horizontal =='d240 )begin
+            counter_vertical<=counter_vertical+'b1;
+            counter_horizontal<=0;
+            end
+            if(counter_vertical =='d240) begin
+            counter_vertical<=0;
+            end
+            pixelactual<=counter_horizontal*(counter_vertical+1);
+
             case(fsm_state)
                 IDLE: begin
-                    if(transmission_done)
-                    begin escalamiento<= 'd0;
-                    end
-                        case(escalamiento)
-                        'd0:begin
-                            counter_horizontal <= 'b0;
-                            counter_vertical <= 'b0;
-                            pixel_memoria <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd1: begin
-                            imagen <= pixel_data_mem[pixel_memoria];
-                            counter_horizontal <= counter_horizontal+1;
-                            if(counter_horizontal==1)
-                            begin 
-                                escalamiento<= 'd2;
-                            end
-                        end
-                        'd2: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
-                                counter_vertical<=counter_vertical+'b1;
-                                if(counter_vertical==2)begin 
-                                    escalamiento<= 'd4; 
-                                end else begin 
-                                    escalamiento<= 'd3; 
-                                end
-                            end else begin
-                                counter_horizontal <= 'b0;
-                                escalamiento<= 'd1;
-                            end
-                        end
-                        'd3: begin
-                            pixel_memoria<=pixel_memoria-'d80;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd4: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            counter_vertical<=0;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd5:begin
-                            counter_horizontal <= 'b0;
-                            counter_vertical <= 'b0;
-                            pixel_memoria <= 'b0; 
-                            escalamiento<= 'd0;
-                        end
-
-                    endcase    
-                end
-                TRISTE:  begin
-                    if(transmission_done)
-                    begin escalamiento<= 'd0;
-                    end
-                        case(escalamiento)
-                        'd0:begin
-                            counter_horizontal <= 'b0;
-                            counter_vertical <= 'b0;
-                            pixel_memoria <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd1: begin
-                            imagen <= pixel_data_mem[pixel_memoria];
-                            counter_horizontal <= counter_horizontal+1;
-                            if(counter_horizontal==1)
-                            begin 
-                                escalamiento<= 'd2;
-                            end
-                        end
-                        'd2: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            if(pixel_memoria==3041)begin 
-                                pixel_memoria<=6401;
-                            end
-                            if(pixel_memoria==7200)begin 
-                                pixel_memoria<=3842;
-                            end
-                            if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
-                                counter_vertical<=counter_vertical+'b1;
-                                if(counter_vertical==2)begin 
-                                    escalamiento<= 'd4; 
-                                end else begin 
-                                    escalamiento<= 'd3; 
-                                end
-                            end else begin
-                                counter_horizontal <= 'b0;
-                                escalamiento<= 'd1;
-                            end
-                        end
-                        'd3: begin
-                            pixel_memoria<=pixel_memoria-'d80;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd4: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            counter_vertical<=0;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                    endcase    
-                end
-                CARINO: begin
-                    if(transmission_done)
-                    begin escalamiento<= 'd0;
-                    end
-                        case(escalamiento)
-                        'd0:begin
-                            counter_horizontal <= 'b0;
-                            counter_vertical <= 'b0;
-                            pixel_memoria <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd1: begin
-                            imagen <= pixel_data_mem[pixel_memoria];
-                            counter_horizontal <= counter_horizontal+1;
-                            if(counter_horizontal==1)
-                            begin 
-                                escalamiento<= 'd2;
-                            end
-                        end
-                        'd2: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            if(pixel_memoria==3361)begin 
-                                pixel_memoria<=7001;
-                            end
-                            if(pixel_memoria==8320)begin 
-                                pixel_memoria<=4482;
-                            end
-                            if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
-                                counter_vertical<=counter_vertical+'b1;
-                                if(counter_vertical==2)begin 
-                                    escalamiento<= 'd4; 
-                                end else begin 
-                                    escalamiento<= 'd3; 
-                                end
-                            end else begin
-                                counter_horizontal <= 'b0;
-                                escalamiento<= 'd1;
-                            end
-                        end
-                        'd3: begin
-                            pixel_memoria<=pixel_memoria-'d80;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd4: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            counter_vertical<=0;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                    endcase    
-                end
-               /*  DEPRIMIDO:  begin
-                    if(transmission_done)
-                    begin escalamiento<= 'd0;
-                    end
-                        case(escalamiento)
-                        'd0:begin
-                            counter_horizontal <= 'b0;
-                            counter_vertical <= 'b0;
-                            pixel_memoria <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd1: begin
-                            imagen <= pixel_data_mem[pixel_memoria];
-                            counter_horizontal <= counter_horizontal+1;
-                            if(counter_horizontal==1)
-                            begin 
-                                escalamiento<= 'd2;
-                            end
-                        end
-                        'd2: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            if(pixel_memoria==2481)begin 
-                                pixel_memoria<=8321;
-                            end
-                            if(pixel_memoria==9680)begin 
-                                pixel_memoria<=3842;
-                            end
-                            if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
-                                counter_vertical<=counter_vertical+'b1;
-                                if(counter_vertical==2)begin 
-                                    escalamiento<= 'd4; 
-                                end else begin 
-                                    escalamiento<= 'd3; 
-                                end
-                            end else begin
-                                counter_horizontal <= 'b0;
-                                escalamiento<= 'd1;
-                            end
-                        end
-                        'd3: begin
-                            pixel_memoria<=pixel_memoria-'d80;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd4: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            counter_vertical<=0;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                    endcase    
-                end */
-                /* MUERTO:  begin
-                    if(transmission_done)
-                    begin escalamiento<= 'd0;
-                    end
-                        case(escalamiento)
-                        'd0:begin
-                            counter_horizontal <= 'b0;
-                            counter_vertical <= 'b0;
-                            pixel_memoria <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd1: begin
-                            imagen <= pixel_data_mem[pixel_memoria];
-                            counter_horizontal <= counter_horizontal+1;
-                            if(counter_horizontal==1)
-                            begin 
-                                escalamiento<= 'd2;
-                            end
-                        end
-                        'd2: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            if(pixel_memoria==961)begin 
-                                pixel_memoria<=9681;
-                            end
-                            if(pixel_memoria==12400)begin 
-                                pixel_memoria<=3682;
-                            end
-                            if(pixel_memoria % 'd80==0 && pixel_memoria!='b0)begin
-                                counter_vertical<=counter_vertical+'b1;
-                                if(counter_vertical==2)begin 
-                                    escalamiento<= 'd4; 
-                                end else begin 
-                                    escalamiento<= 'd3; 
-                                end
-                            end else begin
-                                counter_horizontal <= 'b0;
-                                escalamiento<= 'd1;
-                            end
-                        end
-                        'd3: begin
-                            pixel_memoria<=pixel_memoria-'d80;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                        'd4: begin
-                            pixel_memoria<=pixel_memoria+'b1;
-                            counter_vertical<=0;
-                            counter_horizontal <= 'b0;
-                            escalamiento<= 'd1;
-                        end
-                    endcase    
-                end */
-                default: imagen <= 'h001F; // Azul oscuro
+					 offset<=0;
+					 end
+                TRISTE:  
+					 begin
+                if(pixelactual>3041 && pixelactual<3842) 
+                            offset<=64001-3041;
+                        else 
+                            offset<=0;
+					 end
+                CARINO:  offset<=0;
+                DEPRIMIDO:   offset<=0;
+                MUERTO:   offset<=0;
+                default: offset<=0; // Azul oscuro
             endcase
         end
     end
-
+    always @(posedge clk_out)begin
+    pixel_memoria <= counter_horizontal/3 * (counter_vertical/3+1)+offset;
+    imagen <= pixel_data_mem[pixel_memoria];
+    end 
 
     always @(posedge clk_input_data) begin
         if (!rst) begin
@@ -358,7 +126,7 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
             current_pixel <= 'b0;
         end else begin
             if (!transmission_done) begin
-                current_pixel <= imagen; 
+                current_pixel <= imagen;
                 pixel_counter <= pixel_counter + 1;
                 if (pixel_counter == RESOLUTION - 1) begin
                     transmission_done <= 1;
