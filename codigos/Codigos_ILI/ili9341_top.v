@@ -17,7 +17,7 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
     reg [3:0] fsm_state, next_state, escalamiento;
     reg [PIXEL_SIZE-1:0] imagen;
     reg [PIXEL_SIZE-1:0] current_pixel;
-    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:(160*80)-1];
+    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:(100*60)-1];
 
 
     reg [$clog2(RESOLUTION)-1:0] pixel_counter;
@@ -86,36 +86,60 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
                 Nueva_imagen <= 1'b0;
             end 
             prev_visua <= visua;
+
+            if (transmission_done) begin
+            counter_horizontal <= 'b0;
+            counter_vertical <= 'b0;
+            offset <= 'b0;
+        end else begin
+            
             counter_horizontal<=counter_horizontal+1; 
-            if(counter_horizontal =='d240 )begin
+            if(counter_horizontal =='d239 )begin
             counter_vertical<=counter_vertical+'b1;
             counter_horizontal<=0;
             end
-            if(counter_vertical =='d240) begin
+            if(counter_vertical =='d239) begin
             counter_vertical<=0;
             end
-            pixelactual<=counter_horizontal*(counter_vertical+1);
+        end
+           pixelactual <= (counter_vertical * 240) + counter_horizontal;
 
             case(fsm_state)
-                IDLE: begin
-					 offset<=0;
-					 end
-                TRISTE:  
-					 begin
-                if(pixelactual>3041 && pixelactual<3842) 
-                            offset<=64001-3041;
-                        else 
-                            offset<=0;
-					 end
-                CARINO:  offset<=0;
-                DEPRIMIDO:   offset<=0;
-                MUERTO:   offset<=0;
+                IDLE: offset<=0;
+                TRISTE:  begin
+                if (pixelactual >= 29760 && pixelactual < 35520) begin
+                    offset <= 3601 - 1860;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                CARINO:  begin
+                if (pixelactual >= 29760 && pixelactual < 35520) begin
+                    offset <= 3601 - 1860;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                DEPRIMIDO:   begin
+                if (pixelactual >= 29760 && pixelactual < 35520) begin
+                    offset <= 3601 - 1860;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
+                MUERTO:   begin
+                if (pixelactual >= 29760 && pixelactual < 35520) begin
+                    offset <= 3601 - 1860;  // Apply the desired offset
+                end else begin
+                    offset <= 0;
+                end
+            end
                 default: offset<=0; // Azul oscuro
             endcase
         end
     end
     always @(posedge clk_out)begin
-    pixel_memoria <= counter_horizontal/3 * (counter_vertical/3+1)+offset;
+    pixel_memoria <= ((counter_horizontal / 4) + (counter_vertical / 4) * 60) + offset;
     imagen <= pixel_data_mem[pixel_memoria];
     end 
 
