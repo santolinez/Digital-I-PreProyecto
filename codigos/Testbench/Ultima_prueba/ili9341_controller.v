@@ -1,4 +1,4 @@
-//`include "spi_master.v"
+
 module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, parameter PIXEL_SIZE = 16)(
         input  wire clk,    
         input  wire rst,
@@ -324,7 +324,7 @@ module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, param
                                 spi_data <= {1'b0, ILI9341_MADCTL}; 
                                 next_config <= 'b1;
                             end
-                            'b1: spi_data <= {1'b1, MADCTL_MX|MADCTL_MY|MADCTL_MV|MADCTL_BGR};
+                            'b1: spi_data <= {1'b1, MADCTL_MX | MADCTL_BGR};//MADCTL_MX|MADCTL_MY|MADCTL_MV|
                         endcase
                     end else begin
                         available_data <= 1'b0;
@@ -352,7 +352,7 @@ module ili9341_controller#(parameter DATA_SIZE = 9, parameter STATES = 12, param
                                 next_config <= 'd4;
                             end
                             'd4: begin
-                                spi_data <= {1'b1, 8'h3F};
+                                spi_data <= {1'b1, 8'hEF};
                                 next_config <= 'd5;
                             end
                             'd5: begin

@@ -196,7 +196,7 @@ module Maquina_Estados_1 (
             end
 				
 				Estado_Dormido: begin
-					if (((Nivel_Descanso == 3)&(~Senal_MTest)&(Sensor_Luz))||((Senal_MTest)&(cambio_test==12)))
+					if (((Nivel_Descanso == 3)&(~Senal_MTest)&(~Sensor_Luz))||((Senal_MTest)&(cambio_test==12)))
                     Estado_Siguiente <= Estado_IDLE;
                else if (Sensor_Luz&(~Senal_MTest))
                     Estado_Siguiente <= Estado_Dormido;  // Mantenerse en Estado_Comiendo mientras Boton_Comida esté activo
@@ -209,7 +209,7 @@ module Maquina_Estados_1 (
             end
 				
 				Estado_Carisia: begin
-				    if (((Nivel_Animo == 3)&(~Senal_MTest)&(Sensor_UltraSonido))||((Senal_MTest)&(cambio_test==16)))
+				    if (((Nivel_Animo == 3)&(~Senal_MTest)&(~Sensor_UltraSonido))||((Senal_MTest)&(cambio_test==16)))
                     Estado_Siguiente <= Estado_IDLE;
                 else if (Sensor_UltraSonido&(~Senal_MTest))
                     Estado_Siguiente <= Estado_Carisia;  // Mantenerse en Estado_Comiendo mientras Boton_Comida esté activo
