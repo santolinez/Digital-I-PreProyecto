@@ -125,92 +125,92 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
             case(fsm_state)
                 IDLE: offset<=0;
                 HAMBRE:  begin
-                if (pixelactual >= 28800 && pixelactual < 33600) begin
-                    offset <= 2305 - 1152;  // Apply the desired offset
+                if (pixelactual >= 30090 && pixelactual < 33705) begin
+                    offset <= 2305 - 1218;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 DESNUTRIDO:  begin
-                if (pixelactual >= 28800 && pixelactual < 33600) begin
-                    offset <= 2305 - 1152;  // Apply the desired offset
+                if (pixelactual >= 30090 && pixelactual < 33705) begin
+                    offset <= 2305 - 1218;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 COMIENDO:   begin
-                if (pixelactual >= 27600 && pixelactual < 40800) begin
-                    offset <= 2498 - 1104;  // Apply the desired offset
+                if (pixelactual >= 28900 && pixelactual < 39760) begin
+                    offset <= 2453 - 1172;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 TOS:   begin
-                if (pixelactual >= 25200 && pixelactual < 33600) begin
-                    offset <= 3027 - 1008;  // Apply the desired offset
+                if (pixelactual >= 25235 && pixelactual < 33720) begin
+                    offset <= 2898 - 1015;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 FIEBRE:   begin
-                if (pixelactual >= 25200 && pixelactual < 33600) begin
-                    offset <= 3027 - 1008;  // Apply the desired offset
+                if (pixelactual >= 25235 && pixelactual < 33720) begin
+                    offset <= 2898 - 1015;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 PILDORA:   begin
-                if (pixelactual >= 28800 && pixelactual < 34800) begin
-                    offset <= 3364 - 1152;  // Apply the desired offset
+                if (pixelactual >= 28900 && pixelactual < 34920) begin
+                    offset <= 3252 - 1172;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 CANSADO:   begin
-                if (pixelactual >= 1200 && pixelactual < 24000) begin
-                    offset <= 3605 - 48;  // Apply the desired offset
+                if (pixelactual >= 13350 && pixelactual < 24150) begin
+                    offset <= 4976 - 558;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  DESVELO:   begin
-                if (pixelactual >= 1200 && pixelactual < 24000) begin
-                    offset <= 3605 - 48;  // Apply the desired offset
+                if (pixelactual >= 13350 && pixelactual < 24150) begin
+                    offset <= 4976 - 558;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  DORMIDO:   begin
-                if (pixelactual >= 1200 && pixelactual < 27600) begin
-                    offset <= 4518 - 48;  // Apply the desired offset
+                if (pixelactual >= 1400 && pixelactual < 28940) begin
+                    offset <= 3497 - 88;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  TRISTE:   begin
-                if (pixelactual >= 26400 && pixelactual < 31200) begin
-                    offset <= 5575 - 1056;  // Apply the desired offset
+                if (pixelactual >= 25250 && pixelactual < 33740) begin
+                    offset <= 5409 - 1018;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  DEPRESION:   begin
-                if (pixelactual >= 26400 && pixelactual < 31200) begin
-                    offset <= 5575 - 1056;  // Apply the desired offset
+                if (pixelactual >= 25250 && pixelactual < 33740) begin
+                    offset <= 5409 - 1018;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  CARISIA:   begin
-                if (pixelactual >= 1200 && pixelactual < 22800) begin
-                    offset <= 5768 - 48;  // Apply the desired offset
+                if (pixelactual >= 1395 && pixelactual < 11000) begin
+                    offset <= 4590 - 87;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 MUERTO:   begin
-                if (pixelactual >= 2400 && pixelactual < 55200) begin
-                    offset <= 6633 - 96;  // Apply the desired offset
+                if (pixelactual >= 2515 && pixelactual < 55350) begin
+                    offset <= 5764 - 119;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
