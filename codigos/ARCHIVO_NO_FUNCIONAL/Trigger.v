@@ -94,7 +94,6 @@ always @(posedge micro) begin
 					  Trigger <= 0;
                 Tiempo <= Tiempo + 1;
                 if (Tiempo < 1000) begin
-							Tiempo<=0;
                     led_reg = 0;
 					 end else begin
                     led_reg = 1;
