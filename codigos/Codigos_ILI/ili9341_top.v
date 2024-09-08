@@ -125,49 +125,56 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
             case(fsm_state)
                 IDLE: offset<=0;
                 HAMBRE:  begin
-                if (pixelactual >= 30090 && pixelactual < 33705) begin
+                if ((counter_vertical >= 25 && counter_vertical <= 28) && 
+        (counter_horizontal >= 18 && counter_horizontal <= 21)) begin
                     offset <= 2305 - 1218;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 DESNUTRIDO:  begin
-                if (pixelactual >= 30090 && pixelactual < 33705) begin
+                if ((counter_vertical >= 25 && counter_vertical <= 28) && 
+        (counter_horizontal >= 18 && counter_horizontal <= 21))  begin
                     offset <= 2305 - 1218;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 COMIENDO:   begin
-                if (pixelactual >= 28900 && pixelactual < 39760) begin
+                if ((counter_vertical >= 24 && counter_vertical <= 33) && 
+        (counter_horizontal >= 20 && counter_horizontal <= 32))  begin
                     offset <= 2453 - 1172;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 TOS:   begin
-                if (pixelactual >= 25235 && pixelactual < 33720) begin
+                if ((counter_vertical >= 21 && counter_vertical <= 28) && 
+        (counter_horizontal >= 7 && counter_horizontal <= 24))  begin
                     offset <= 2898 - 1015;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 FIEBRE:   begin
-                if (pixelactual >= 25235 && pixelactual < 33720) begin
+                if ((counter_vertical >= 21 && counter_vertical <= 28) && 
+        (counter_horizontal >= 7 && counter_horizontal <= 24)) begin
                     offset <= 2898 - 1015;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 PILDORA:   begin
-                if (pixelactual >= 28900 && pixelactual < 34920) begin
+                if ((counter_vertical >= 24 && counter_vertical <= 29) && 
+        (counter_horizontal >= 20 && counter_horizontal <= 24)) begin
                     offset <= 3252 - 1172;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 CANSADO:   begin
-                if (pixelactual >= 13350 && pixelactual < 24150) begin
+                if ((counter_vertical >= 11 && counter_vertical <= 20) && 
+        (counter_horizontal >= 30 && counter_horizontal <= 30)) begin
                     offset <= 4976 - 558;  // Apply the desired offset
                 end else begin
                     offset <= 0;
