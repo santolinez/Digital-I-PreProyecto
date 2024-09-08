@@ -17,7 +17,7 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
     reg [3:0] fsm_state, next_state, escalamiento;
     reg [PIXEL_SIZE-1:0] imagen;
     reg [PIXEL_SIZE-1:0] current_pixel;
-    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:(8000)-1];//SI NECESITAN MAS MEMORIA BAJENLE A EL 8000
+    reg [PIXEL_SIZE-1:0] pixel_data_mem[0:(8000)-1];
 
 
     reg [$clog2(RESOLUTION)-1:0] pixel_counter;
@@ -182,7 +182,7 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
             end
                  DORMIDO:   begin
                 if (pixelactual >= 1200 && pixelactual < 27600) begin
-                    offset <= 4518 - 1200;  // Apply the desired offset
+                    offset <= 4518 - 48;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
