@@ -6,6 +6,16 @@
 
 
 ## Componentes de Interacción
+
+|Componente|Referencia|Imagen|Funcionalidad|
+|--|--|--|--|
+|FPGA | ALGUITO| ![alt text](<Imagenes/FPGA EP4CE6E22C8N.webp>) | | 
+|Tarjeta de desarrollo| ALGUITO|![alt text](Imagenes/Tarjeta_De_Desarrollo.jpg)||
+|Botones|ALGUITO|||
+|Sensor Ultra Sonido|ALGUITO|||
+|Sensor de Luz|ALGUITO|||
+
+
 **Botones**
 * `Reset`: Para restablecer el Tamagotchi a un estado inicial conocido, simplemente mantén pulsado el botón durante al menos 5 segundos. Este estado inicial simula el despertar de la mascota con salud óptima. El botón necesario para realizar esta acción se encuentra en la tarjeta de desarrollo de la FPGA.
 
