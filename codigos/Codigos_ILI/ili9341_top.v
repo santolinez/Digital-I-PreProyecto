@@ -125,102 +125,91 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
             case(fsm_state)
                 IDLE: offset<=0;
                 HAMBRE:  begin
-                if ((counter_vertical >= 25 && counter_vertical <= 28) && 
-        (counter_horizontal >= 18 && counter_horizontal <= 21)) begin
-                    offset <= 2305 - 1218;  // Apply the desired offset
+               if (pixelactual >= 30000 && pixelactual < 33600) begin
+                    offset <= 2305 - 1200;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 DESNUTRIDO:  begin
-                if ((counter_vertical >= 25 && counter_vertical <= 28) && 
-        (counter_horizontal >= 18 && counter_horizontal <= 21))  begin
-                    offset <= 2305 - 1218;  // Apply the desired offset
+                if (pixelactual >= 30000 && pixelactual < 33600) begin
+                    offset <= 2305 - 1200;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 COMIENDO:   begin
-                if ((counter_vertical >= 24 && counter_vertical <= 33) && 
-        (counter_horizontal >= 20 && counter_horizontal <= 32))  begin
-                    offset <= 2453 - 1172;  // Apply the desired offset
+                if (pixelactual >= 28000 && pixelactual < 39600) begin
+                    offset <= 2450 - 1152;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 TOS:   begin
-                if ((counter_vertical >= 21 && counter_vertical <= 28) && 
-        (counter_horizontal >= 7 && counter_horizontal <= 24))  begin
-                    offset <= 2898 - 1015;  // Apply the desired offset
+                if (pixelactual >= 25200 && pixelactual < 36600) begin
+                    offset <= 2883 - 1008;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 FIEBRE:   begin
-                if ((counter_vertical >= 21 && counter_vertical <= 28) && 
-        (counter_horizontal >= 7 && counter_horizontal <= 24)) begin
-                    offset <= 2898 - 1015;  // Apply the desired offset
+                if (pixelactual >= 25200 && pixelactual < 36600) begin
+                    offset <= 2883 - 1008;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 PILDORA:   begin
-                if ((counter_vertical >= 24 && counter_vertical <= 29) && 
-        (counter_horizontal >= 20 && counter_horizontal <= 24)) begin
-                    offset <= 3252 - 1172;  // Apply the desired offset
+                if (pixelactual >= 28800 && pixelactual < 34800) begin
+                    offset <= 3220 - 1152;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 CANSADO:   begin
-                if ((counter_vertical >= 11 && counter_vertical <= 20) && 
-        (counter_horizontal >= 30 && counter_horizontal <= 30)) begin
-                    offset <= 4976 - 558;  // Apply the desired offset
+                if (pixelactual >= 13200 && pixelactual < 2400) begin
+                    offset <= 4951 - 528;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  DESVELO:   begin
-                if (pixelactual >= 13350 && pixelactual < 24150) begin
-                    offset <= 4976 - 558;  // Apply the desired offset
+                if (pixelactual >= 13200 && pixelactual < 2400) begin
+                    offset <= 4951 - 528;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  DORMIDO:   begin
-                if (pixelactual >= 1400 && pixelactual < 28940) begin
-                    offset <= 3497 - 88;  // Apply the desired offset
+                if (pixelactual >= 1200 && pixelactual < 28800) begin
+                    offset <= 3461 - 48;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  TRISTE:   begin
-                if (pixelactual >= 25250 && pixelactual < 33740) begin
-                    offset <= 5409 - 1018;  // Apply the desired offset
+                if (pixelactual >= 25200 && pixelactual < 33600) begin
+                    offset <= 5384 - 1008;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  DEPRESION:   begin
-                if (pixelactual >= 25250 && pixelactual < 33740) begin
-                    offset <= 5409 - 1018;  // Apply the desired offset
+                if (pixelactual >= 25200 && pixelactual < 33600) begin
+                    offset <= 5384 - 1008;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  CARISIA:   begin
-                if (pixelactual >= 1395 && pixelactual < 11000) begin
-                    offset <= 4590 - 87;  // Apply the desired offset
+                if (pixelactual >= 1200 && pixelactual < 10800) begin
+                    offset <= 4566 - 48;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 MUERTO:   begin
-                if (pixelactual >= 2515 && pixelactual < 55350) begin
-                    offset <= 5764 - 119;  // Apply the desired offset
-                end else begin
                     offset <= 0;
-                end
             end
                 default: offset<=0; // Azul oscuro
             endcase
