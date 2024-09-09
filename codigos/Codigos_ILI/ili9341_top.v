@@ -139,21 +139,21 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
                 end
             end
                 COMIENDO:   begin
-                if (pixelactual >= 28000 && pixelactual < 39600) begin
+                if (pixelactual >= 28800 && pixelactual < 39600) begin
                     offset <= 2450 - 1152;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 TOS:   begin
-                if (pixelactual >= 25200 && pixelactual < 36600) begin
+                if (pixelactual >= 25200 && pixelactual < 33600) begin
                     offset <= 2883 - 1008;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                 FIEBRE:   begin
-                if (pixelactual >= 25200 && pixelactual < 36600) begin
+                if (pixelactual >= 25200 && pixelactual < 33600) begin
                     offset <= 2883 - 1008;  // Apply the desired offset
                 end else begin
                     offset <= 0;
@@ -167,14 +167,14 @@ module ili9341_top #(parameter RESOLUTION = 240*240, parameter PIXEL_SIZE = 16, 
                 end
             end
                 CANSADO:   begin
-                if (pixelactual >= 13200 && pixelactual < 2400) begin
+                if (pixelactual >= 13200 && pixelactual < 24000) begin
                     offset <= 4951 - 528;  // Apply the desired offset
                 end else begin
                     offset <= 0;
                 end
             end
                  DESVELO:   begin
-                if (pixelactual >= 13200 && pixelactual < 2400) begin
+                if (pixelactual >= 13200 && pixelactual < 24000) begin
                     offset <= 4951 - 528;  // Apply the desired offset
                 end else begin
                     offset <= 0;
