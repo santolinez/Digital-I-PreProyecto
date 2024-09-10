@@ -1,4 +1,4 @@
-# Entrega 1 del proyecto WP01
+# Entrega del proyecto Tamagotchi `Eris`
 - Stewart Andres Antolinez Zapata `santolinez@unal.edu.co` 
 - Natalia Andrea Dueñas Salamanca `nduenass@unal.edu.co`
 - Juan Diego Saenz Ardila `jsaenza@unal.edu.co` 
@@ -9,21 +9,36 @@
 
 |Componente|Referencia|Imagen|Funcionalidad|
 |--|--|--|--|
-|FPGA | Ciclones IV EP4CE10E22C8N| ![alt text](<Imagenes/FPGA EP4CE6E22C8N.webp>) | | 
-|Tarjeta de desarrollo| ALGUITO|![alt text](Imagenes/Tarjeta_De_Desarrollo.jpg)||
-|Botones|ALGUITO|![alt text](<Imagenes/Botones FPGA.png>)||
-|Sensor Ultra Sonido|ALGUITO|![alt text](Imagenes/Ultra_Sonido_Componente.png)||
-|Sensor de Luz|ALGUITO|![alt text](Imagenes/Sensor_De_Luz_Componente.jpg)||
+|FPGA | Ciclones IV EP4CE10E22C8N|<img src="Imagenes/FPGA EP4CE6E22C8N.webp" width="80"> | Brindar todos los componentes logicos para la descripción de hardware realizada | 
+|Tarjeta de desarrollo| A-C4E6|<img src="Imagenes/Tarjeta_De_Desarrollo.jpg" width="80">|Conexion de entradas y salidas del tamagotchi|
+|Botones|B0D178CN81|<img src="Imagenes/Botones FPGA.png" width="80">|Entrada de pulsadores con el cual modificar el funcionamiento del tamagotchi|
+|Sensor Ultra Sonido|HC-SR04|<img src="Imagenes/Ultra_Sonido_Componente.png" width="80">|Detección de un objeto a una distancia menor a 10 cm para modificar el Nivel Animo|
+|Sensor de Luz|ALGUITO|<img src="Imagenes/Sensor_De_Luz_Componente.jpg" width="80">| Detecciíon de determinada ausencia de luz con el fin de modificar el Nivel Descanso|
 
 
 |Estado|Imagenes|Detalles|
 |--|--|--|
-|Ideal|![alt text](Pollito/0Idle.png)|Todos los niveles se encuentran en su estado maximo|
+|Ideal|![alt text](Pollito/0Idle.png)|Todos los niveles se encuentran en su puntuación maxima la cual es 3|
 |Hambre y  Desnutrición|![alt text](Pollito/1Hambre.png)|El Nivel de Comida se encuntra menor a 3|
 |Comiendo|![alt text](Pollito/3Comiendo.png)|Se pulso el boton de dar comida|
 |Tos|![alt text](Pollito/4Tos.png)|El Nivel de Salud se encuentra menor a 3|
 |Pildora|![alt text](Pollito/6Pildora.png)|Se pulso el boton de dar medicina|
-||||
+|Cansado|![alt text](Pollito/7Cansado1.png)|El Nivel de Descanso se encuentra menor a 3|
+|Dormido|![alt text](Pollito/9Dormido.png)|El Sensor de Luz detecto ausencia luminica por aproximadamente 2.5 segundos|
+|Triste|![alt text](Pollito/11Depresivo.png)|En Nivel de Animo se encuentra menor a 3|
+|Carisia|![alt text](Pollito/12Carisia.png)|El Sensor Ultra Sonido detecto algo menor a 10 cm por aproximadamente 2.5 segundos|
+
+
+# Se Sube luego
+
+
+
+# Se Acabo lo que se Sube Luego
+
+
+
+
+
 
 
 **Botones**
@@ -36,8 +51,6 @@
 * `Boton_Comida`: al presionar el botón destinado para cuidar la alimentación del tamagotchi. Cada vez que lo hagas, el nivel de comida aumentará en 1 (si no está en el nivel máximo). Además, durante los siguientes 5 segundos, verás una visualización especial: si tu Tamagotchi está hambriento o desnutrido, aparecerá una imagen que representa que está comiendo.
 
 * `Boton_Medicina`: al presionar el botón destinado para cuidar la salud del tamagotchi. Cada vez que lo hagas, el nivel de salud aumentará en 1 (si no está en el nivel máximo). Además, durante los siguientes 5 segundos, verás una visualización especial: si tu Tamagotchi está en los estados de tos o fiebre, aparecerá una imagen que representa que está recibiendo una píldora para mejorar su salud. 
-
-![Pulsadores](Imagenes/Pulsadores.png)
 
 
 
