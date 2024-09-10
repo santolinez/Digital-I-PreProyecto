@@ -9,11 +9,21 @@
 
 |Componente|Referencia|Imagen|Funcionalidad|
 |--|--|--|--|
-|FPGA | ALGUITO| ![alt text](<Imagenes/FPGA EP4CE6E22C8N.webp>) | | 
+|FPGA | Ciclones IV EP4CE10E22C8N| ![alt text](<Imagenes/FPGA EP4CE6E22C8N.webp>) | | 
 |Tarjeta de desarrollo| ALGUITO|![alt text](Imagenes/Tarjeta_De_Desarrollo.jpg)||
-|Botones|ALGUITO|||
-|Sensor Ultra Sonido|ALGUITO|||
-|Sensor de Luz|ALGUITO|||
+|Botones|ALGUITO|![alt text](<Imagenes/Botones FPGA.png>)||
+|Sensor Ultra Sonido|ALGUITO|![alt text](Imagenes/Ultra_Sonido_Componente.png)||
+|Sensor de Luz|ALGUITO|![alt text](Imagenes/Sensor_De_Luz_Componente.jpg)||
+
+
+|Estado|Imagenes|Detalles|
+|--|--|--|
+|Ideal|![alt text](Pollito/0Idle.png)|Todos los niveles se encuentran en su estado maximo|
+|Hambre y  Desnutrición|![alt text](Pollito/1Hambre.png)|El Nivel de Comida se encuntra menor a 3|
+|Comiendo|![alt text](Pollito/3Comiendo.png)|Se pulso el boton de dar comida|
+|Tos|![alt text](Pollito/4Tos.png)|El Nivel de Salud se encuentra menor a 3|
+|Pildora|![alt text](Pollito/6Pildora.png)|Se pulso el boton de dar medicina|
+||||
 
 
 **Botones**
