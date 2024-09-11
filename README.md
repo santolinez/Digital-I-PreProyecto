@@ -12,7 +12,7 @@
 |FPGA | Ciclones IV EP4CE10E22C8N|<img src="Imagenes/FPGA EP4CE6E22C8N.webp" width="80"> | Brindar todos los componentes logicos para la descripción de hardware realizada | 
 |Tarjeta de desarrollo| A-C4E6|<img src="Imagenes/Tarjeta_De_Desarrollo.jpg" width="80">|Conexion de entradas y salidas del tamagotchi|
 |Botones|B0D178CN81|<img src="Imagenes/Botones FPGA.png" width="80">|Entrada de pulsadores con el cual modificar el funcionamiento del tamagotchi|
-|Sensor Ultra Sonido|HC-SR04|<img src="Imagenes/Ultra_Sonido_Componente.png" width="80">|Detección de un objeto a una distancia menor a 10 cm para modificar el Nivel Animo|
+|Sensor Ultra Sonido|HC-SR04|<img src="Imagenes/Ultra_Sonido_Componente.png" width="80">|Detección de un objeto a una distancia aproximadamente menor a 20 cm para modificar el Nivel Animo|
 |Sensor de Luz|ALGUITO|<img src="Imagenes/Sensor_De_Luz_Componente.jpg" width="80">| Detecciíon de determinada ausencia de luz con el fin de modificar el Nivel Descanso|
 
 
